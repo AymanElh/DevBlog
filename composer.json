@@ -1,0 +1,12 @@
+{
+    "name": "project/devblog",
+    "description": "Project to implement a bloggin platform about dev",
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Class\\": "classes/"
+        }
+    }
+}

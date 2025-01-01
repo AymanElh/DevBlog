@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/error_config.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class DatabaseHandler
 {
@@ -97,7 +98,7 @@ class DatabaseHandler
             if(!$stmt) {
                 error_log("Error preparing statment: " . implode(', ', $this->db->errorInfo()));
             }
-
+            $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $result;

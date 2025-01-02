@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// namespace Class;
+
 require_once __DIR__ . '/../config/error_config.php';
 
 class DatabaseHandler
@@ -96,6 +98,7 @@ class DatabaseHandler
 
             if(!$stmt) {
                 error_log("Error preparing statment: " . implode(', ', $this->db->errorInfo()));
+                return false;
             }
 
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -104,6 +107,7 @@ class DatabaseHandler
         }
         catch (PDOException $e) {
             error_log("Error selecting records: " . $e->getMessage());
+            return false;
         }
     }
 }

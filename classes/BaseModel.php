@@ -2,15 +2,21 @@
 
 declare(strict_types=1);
 
+namespace Classes;
+
 require_once __DIR__ . '/../config/error_config.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class DatabaseHandler
+use PDO;
+use PDOException;
+
+class BaseModel
 {
-    private  $db;
+    private $db;
 
     function __construct($conn)
     {
+        var_dump($conn);
         $this->db = $conn;
     }
 
@@ -26,7 +32,6 @@ class DatabaseHandler
             $stmt = $this->db->prepare($sql);
 
             if (!$stmt) {
-                error_log($this->db->errorInfo());
                 return false;
             }
 
@@ -97,14 +102,16 @@ class DatabaseHandler
 
             if(!$stmt) {
                 error_log("Error preparing statment: " . implode(', ', $this->db->errorInfo()));
+                return false;
             }
-            $stmt->execute();
+
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $result;
         }
         catch (PDOException $e) {
             error_log("Error selecting records: " . $e->getMessage());
+            return false;
         }
     }
 }

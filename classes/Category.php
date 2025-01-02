@@ -17,6 +17,7 @@ class Category
     private $table = 'categories';
 
     function __construct(BaseModel $dbHandler) {
+        var_dump($dbHandler);
         $this->dbHandler = $dbHandler;
     }
 

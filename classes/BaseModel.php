@@ -12,10 +12,11 @@ use PDOException;
 
 class BaseModel
 {
-    private  $db;
+    private $db;
 
     function __construct($conn)
     {
+        var_dump($conn);
         $this->db = $conn;
     }
 
@@ -31,7 +32,6 @@ class BaseModel
             $stmt = $this->db->prepare($sql);
 
             if (!$stmt) {
-                error_log($this->db->errorInfo());
                 return false;
             }
 

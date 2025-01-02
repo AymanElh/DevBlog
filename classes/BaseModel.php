@@ -16,7 +16,7 @@ class BaseModel
 
     function __construct($conn)
     {
-        var_dump($conn);
+        // var_dump($conn);
         $this->db = $conn;
     }
 
@@ -105,7 +105,11 @@ class BaseModel
                 return false;
             }
 
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if($stmt->execute()) {
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                return false;
+            }
 
             return $result;
         }

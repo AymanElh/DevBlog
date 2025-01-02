@@ -6,15 +6,14 @@ use Config\Database;
 use Classes\BaseModel;
 // require_once __DIR__ . '/../classes/BaseModel.php';
 
-$conn = new Database;
-$db = new BaseModel($conn);
+$conn = Database::connect();
 
-$category = new Category($db);
+$dbHandler = new BaseModel($conn);
 
-$category->createCategory("Dev");
+if ($conn === null) {
+    die('Database connection failed.');
+}
 
-$result = $category->getAllCategories();
+$category = new Category($dbHandler);
+$category->createCategory('Dev');
 
-echo "<pre>";
-print_r($result);
-echo "</pre>";

@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
-// namespace Class;
+namespace Classes;
 
 require_once __DIR__ . '/../config/error_config.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-class DatabaseHandler
+use PDO;
+use PDOException;
+
+class BaseModel
 {
     private  $db;
 

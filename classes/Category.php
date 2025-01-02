@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
+namespace Classes;
+
 require_once __DIR__ . '/../config/error_config.php';
-require_once __DIR__ . '/../classes/DatabaseHandler.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Classes\BaseModel;
 
 
 class Category 
 {
-    private DatabaseHandler $dbHandler;
+    private BaseModel $dbHandler;
     private static $nbrOfCategories = 0;
     private $table = 'categories';
 
-    function __construct(DatabaseHandler $dbHandler) {
+    function __construct(BaseModel $dbHandler) {
         $this->dbHandler = $dbHandler;
     }
 

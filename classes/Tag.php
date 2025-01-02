@@ -1,18 +1,22 @@
 <?php
 
-// namespace Class;
+namespace Classes;
 
 require_once __DIR__ . '/../config/error_config.php';
-require_once __DIR__ . '/../classes/DatabaseHandler.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use PDO;
+use PDOException;
+use Classes\BaseModel;
 
 
 class Tag
 {
-    private DatabaseHandler $dbHandler;
+    private BaseModel $dbHandler;
     private $table = 'tags';
     private static $nbrOfTags = 0;
 
-    function __construct(DatabaseHandler $dbHandler)
+    function __construct(BaseModel $dbHandler)
     {
         $this->dbHandler = $dbHandler;
     }

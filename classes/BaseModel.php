@@ -34,6 +34,8 @@ class BaseModel
             if (!$stmt) {
                 return 0;
             }
+            
+            $stmt->execute(array_values($data));
 
         return (int)$this->db->lastInsertId();
         } catch (PDOException $e) {

@@ -69,9 +69,9 @@ class BaseModel
         }
     }
 
-    public function deleteRecord(string $table, int $id) : bool
+    public function deleteRecord(string $table, int $id, string $column = 'id') : bool
     {
-        $sql = "DELETE FROM $table WHERE id = ?";
+        $sql = "DELETE FROM $table WHERE $column = ?";
 
         try {
             $stmt = $this->db->prepare($sql);

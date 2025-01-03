@@ -34,6 +34,8 @@ class BaseModel
             if (!$stmt) {
                 return 0;
             }
+            
+            $stmt->execute(array_values($data));
 
         return (int)$this->db->lastInsertId();
         } catch (PDOException $e) {
@@ -69,9 +71,9 @@ class BaseModel
         }
     }
 
-    public function deleteRecord(string $table, int $id) : bool
+    public function deleteRecord(string $table, int $id, string $column = 'id') : bool
     {
-        $sql = "DELETE FROM $table WHERE id = ?";
+        $sql = "DELETE FROM $table WHERE $column = ?";
 
         try {
             $stmt = $this->db->prepare($sql);

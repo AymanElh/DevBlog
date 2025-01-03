@@ -20,7 +20,7 @@ class BaseModel
         $this->db = $conn;
     }
 
-    public function insertRecord(string $table, array $data) : bool
+    public function insertRecord(string $table, array $data) : int
     {
         // Use prepared statements to prevent SQL injection
         $columns = implode(',', array_keys($data));
@@ -32,13 +32,13 @@ class BaseModel
             $stmt = $this->db->prepare($sql);
 
             if (!$stmt) {
-                return false;
+                return 0;
             }
 
-            return $stmt->execute(array_values($data));
+        return (int)$this->db->lastInsertId();
         } catch (PDOException $e) {
             error_log($e->getMessage());
-            return false;
+            return 0;
         }
     }
 

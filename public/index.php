@@ -35,3 +35,5 @@ $article = new Article($dbHandler);
 //     scheduleDate: '2025-01-15',
 //     tags: ['PHP', 'MySQL']
 // );
+
+// $article->deleteArticle(4);

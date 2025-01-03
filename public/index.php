@@ -15,5 +15,5 @@ if ($conn === null) {
 }
 
 $category = new Category($dbHandler);
-$category->createCategory('Dev');
+// $category->createCategory('scinece');
 

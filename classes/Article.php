@@ -28,35 +28,35 @@ class Article
         $this->basemodel = $basemodel;
     }
 
-    private function getCategoryId(string $cat) : int
+    private function getCategoryId(string $cat): int
     {
         $where = "name LIKE '$cat'";
-        $result = $this->basemodel->selectRecords('categories', 'id', $where);   
-        if(!$result) {
+        $result = $this->basemodel->selectRecords('categories', 'id', $where);
+        if (!$result) {
             return [];
         }
         return $result[0]['id'];
     }
 
-    private function getTagId(string $tag) : int
+    private function getTagId(string $tag): int
     {
         $where = "name LIKE '$tag'";
         $result = $this->basemodel->selectRecords('tags', 'id', $where);
-        if(!$result) {
+        if (!$result) {
             return [];
         }
         return $result[0]['id'];
     }
 
-    private function getSlug(string $title) : string
+    private function getSlug(string $title): string
     {
         $title = strtolower($title);
-        $title = str_replace(' ' , '-', $title);
-        $title = preg_replace('/[^a-z0-9\-]/', '', $title); 
+        $title = str_replace(' ', '-', $title);
+        $title = preg_replace('/[^a-z0-9\-]/', '', $title);
         return $title;
     }
 
-    public function createArticle(string $title, string $content, string $picture, string $category, string $status, string $scheduleDate, int $author_id, array $tags) 
+    public function createArticle(string $title, string $content, string $picture, string $category, string $status, string $scheduleDate, int $author_id, array $tags)
     {
         $data = [
             "title" => $title,
@@ -69,25 +69,51 @@ class Article
             "author_id" => $author_id
         ];
         $lastId = $this->basemodel->insertRecord($this->table, $data);
-        echo "Last inserted id: $lastId";
-        foreach($tags as $tag) {
+
+        foreach ($tags as $tag) {
             $this->basemodel->insertRecord('article_tags', ['article_id' => $lastId, 'tag_id' => $this->getTagId($tag)]);
         }
-        
     }
 
-    public function updateArticle()
+    public function updateArticle(int $id, string $title = null, string $content = null, string $picture = null, string $category = null, string $status = null, string $scheduleDate = null, array $tags = null)
     {
+        $data = [];
 
+        if ($title) {
+            $data["title"] = $title;
+            $data["slug"] = $this->getSlug($title);
+        }
+        if ($content) {
+            $data["content"] = $content;
+        }
+        if ($picture) {
+            $data["featured_image"] = $picture;
+        }
+        if ($category) {
+            $data["category_id"] = $this->getCategoryId($category);
+        }
+        if ($status) {
+            $data["status"] = $status;
+        }
+        if ($scheduleDate) {
+            $data["scheduled_date"] = $scheduleDate;
+        }
+
+        if (!empty($data)) {
+            $this->basemodel->updateRecord($this->table, $data, $id);
+        }
+
+        if ($tags) {
+            $this->basemodel->deleteRecord('article_tags', $id, 'article_id');
+
+            foreach ($tags as $tag) {
+                $this->basemodel->insertRecord('article_tags', ['article_id' => $id, 'tag_id' => $this->getTagId($tag)]);
+            }
+        }
     }
 
-    public function deleteArticle() 
-    {
 
-    }
+    public function deleteArticle() {}
 
-    public static function getAllArticles()
-    {
-        
-    }
+    public static function getAllArticles() {}
 }

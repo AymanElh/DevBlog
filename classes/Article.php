@@ -153,5 +153,18 @@ class Article
         }
     }
 
+    public function getArticlesByAuthor(int $author_id) : array
+    {
+        $where = "author_id = $author_id";
+        return $this->basemodel->selectRecords($this->table, '*', $where);
+    }
+
+    public function getArticleById(int $article_id) : array
+    {
+        $where = "id = $article_id";
+        $result =  $this->basemodel->selectRecords($this->table, '*', $where);
+        return $result ? $result[0] : [];
+    }
+
     public static function getAllArticles() {}
 }

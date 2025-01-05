@@ -7,97 +7,51 @@ namespace Classes;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/error_config.php';
 
-use Exception;
+
+use Classes\BaseModel;
 
 class User 
 {
-    protected string $name;
-    protected string $username;
-    protected string $email;
-    protected string $password_hash;
-    protected string $bio;
-    protected string $pic;
-    protected string $role;
+    protected BaseModel $basemodel;
+    protected static string $table;
 
-
-    function __construct(string $name, string $username, string $email, string $password_hash, string $bio = "", string $pic = "", string $role = "user")
+    function __construct(BaseModel $basemodel)
     {
-        $this->name = $name;
-        $this->username = $username;
-        $this->email = $email;
-        $this->password_hash = $password_hash;
-        $this->bio = $bio;
-        $this->pic = $pic;
-        $this->role = $role;
+        $this->basemodel = $basemodel;
+        self::$table = 'users'; 
     }
 
-
-    // setters
-    public function setName(string $name) 
+    public function createUser(string $name, string $username, string $email, string $password_hash, string $bio = "", string $pic = "", string $role = "normal_user") : int
     {
-        $this->name = $name;
-    }
-    public function setUsername(string $username) 
-    {
-        $this->username = $username;
-    }
-    public function setEmail(string $email) 
-    {
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Invalid email");
-        }
-        $this->email = $email;
-    }
-    public function setPassword(string $password) 
-    {
-        $this->password_hash = password_hash($password, PASSWORD_BCRYPT);
-    }
-    public function setBio(string $bio) 
-    {
-        $this->bio = $bio;
-    }
-    public function setPic(string $pic) 
-    {
-        $this->pic = $pic;
-    }
-    public function setRole($role)
-    {
-        $this->role = $role;
+        $data = [
+            "full_name" => $name,
+            "username" => $username,
+            "email" => $email,
+            "password_hash" => $password_hash,
+            "bio" => $bio,
+            "profile_picture_url" => $pic,
+            "role" => $role
+        ];
+        return self::$basemodel->insertRecord(self::$table, $data);
     }
 
-    // getters
-    public function getName() : string
+    public function updateProfile(int $id, array $data) : bool
     {
-        return $this->name;
-    }
-    public function getUsername() : string
-    {
-        return $this->username;
-    }
-    public function getEmail() : string
-    {
-        return $this->email;
-    }
-    public function getPasswordHash() : string
-    {
-        return $this->password_hash;
-    }
-    public function getBio() : string 
-    {
-        return $this->bio;
-    }
-    public function getPic() : string
-    {
-        return $this->pic;
-    }
-    public function getRole() : string
-    {
-        return $this->role;
+        return self::$basemodel->updateRecord(self::$table, $data, $id);
     }
 
-    public function verifyPassword(string $password) : bool
+    public function usernameExist($username) : bool
     {
-        return password_verify($password, $this->password_hash);
+        $where = "username = $username";
+        $result = self::$basemodel->selectRecords(self::$table, '*', $where);
+        return $result ? true : false;
+    }
+
+    public function emailExist($email) : bool
+    {
+        $where = "email = $email";
+        $result = self::$basemodel->selectRecords(self::$table, '*', $where);
+        return $result ? true : false;
     }
 
 

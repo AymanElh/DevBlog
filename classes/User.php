@@ -21,7 +21,7 @@ class User
         self::$table = 'users'; 
     }
 
-    public function createUser(string $name, string $username, string $email, string $password_hash, string $bio = "", string $pic = "", string $role = "normal_user") : int
+    public function createUser(string $name, string $username, string $email, string $password_hash, string $bio = "", string $pic = "", string $role = "guest") : int
     {
         $data = [
             "full_name" => $name,
@@ -32,25 +32,25 @@ class User
             "profile_picture_url" => $pic,
             "role" => $role
         ];
-        return self::$basemodel->insertRecord(self::$table, $data);
+        return $this->basemodel->insertRecord(self::$table, $data);
     }
 
     public function updateProfile(int $id, array $data) : bool
     {
-        return self::$basemodel->updateRecord(self::$table, $data, $id);
+        return $this->basemodel->updateRecord(self::$table, $data, $id);
     }
 
     public function usernameExist($username) : bool
     {
         $where = "username = $username";
-        $result = self::$basemodel->selectRecords(self::$table, '*', $where);
+        $result = $this->basemodel->selectRecords(self::$table, '*', $where);
         return $result ? true : false;
     }
 
     public function emailExist($email) : bool
     {
         $where = "email = $email";
-        $result = self::$basemodel->selectRecords(self::$table, '*', $where);
+        $result = $this->basemodel->selectRecords(self::$table, '*', $where);
         return $result ? true : false;
     }
 

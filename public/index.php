@@ -6,6 +6,7 @@ use Config\Database;
 use Classes\BaseModel;
 use Classes\Article;
 use Classes\Tag;
+use Classes\Admin;
 // require_once __DIR__ . '/../classes/BaseModel.php';
 
 $conn = Database::connect();
@@ -37,3 +38,16 @@ $article = new Article($dbHandler);
 // );
 
 // $article->deleteArticle(4);
+
+$category = new Category($dbHandler);
+$tag = new Tag($dbHandler);
+$admin = new Admin(
+    "admin",
+    "admin123",
+    "admin@gmail.com",
+    password_hash("adminpass", PASSWORD_BCRYPT),
+    $category,
+    $tag
+);
+
+// $admin->createCategory("Cyber Security");

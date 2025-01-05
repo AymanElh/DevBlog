@@ -6,6 +6,9 @@ use Config\Database;
 use Classes\BaseModel;
 use Classes\Article;
 use Classes\Tag;
+use Classes\User;
+use Classes\Admin;
+use Classes\Author;
 // require_once __DIR__ . '/../classes/BaseModel.php';
 
 $conn = Database::connect();
@@ -37,3 +40,18 @@ $article = new Article($dbHandler);
 // );
 
 // $article->deleteArticle(4);
+
+
+// $user = new User($dbHandler);
+
+// $userData = [
+//     'John Doe',
+//     'john_doe',
+//     'john@example.com',
+//     password_hash('password123', PASSWORD_BCRYPT), 
+// ];
+
+// $userId = $user->createUser(...$userData);
+
+// echo $userId;
+

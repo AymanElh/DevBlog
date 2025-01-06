@@ -29,7 +29,7 @@ class Article
         $this->basemodel = $basemodel;
     }
 
-    private function getCategoryId(string $cat): ?int
+    public function getCategoryId(string $cat): ?int
     {
 
         try {
@@ -61,7 +61,7 @@ class Article
         }
     }
 
-    private function getSlug(string $title): string
+    public static function getSlug(string $title): string
     {
         $title = strtolower($title);
         $title = str_replace(' ', '-', $title);

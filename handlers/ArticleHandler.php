@@ -86,4 +86,70 @@ class ArticleHandler
             }
         }
     }
+
+    public function updateArticle($articleId) : bool
+    {
+        if (isset($_POST['update-article']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = $this->sanitizeInput($_POST['article-title']);
+            $content = $this->sanitizeInput($_POST['article-content']);
+            $category = $_POST['category'];
+            $status = $_POST['status'];
+            $scheduledDate = $_POST['schedule-date'];
+            $tags = $_POST['tags']; 
+
+    
+            if (strlen($title) < 3 || strlen($content) < 10) {
+                return 'Title and Content must be at least 3 and 10 characters long, respectively.';
+            }
+
+            $filePath = null;
+            if (isset($_FILES['article-img']) && $_FILES['article-img']['error'] === UPLOAD_ERR_OK) {
+                $file = $_FILES['article-img'];
+
+                $uploadDir = __DIR__ . '/../public/assets/img';
+                $filePath = $uploadDir . basename($file['name']);
+                if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+                    return 'Error uploading the file.';
+                }
+            }
+
+            // Prepare data for article update
+            $categoryId = $this->article->getCategoryId($category);
+            if (!$categoryId) {
+                return 'Invalid category.';
+            }
+
+            $slug = Article::getSlug($title);
+            $data = [
+                'title' => $title,
+                'content' => $content,
+                'image_path' => $filePath,
+                'category_id' => $categoryId,
+                'status' => $status,
+                'scheduled_date' => $scheduledDate,
+                'slug' => $slug,
+            ];
+
+            try {
+                $this->article->updateArticle($articleId, $data, $tags);
+                return true;
+            } catch (Exception $e) {
+                error_log('Error: ' . $e->getMessage());
+                return false;
+            }
+        }
+    }
+
+    public function deleteArticle(int $articleId) : string
+    {
+        if (isset($_POST['delete-article']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $this->article->deleteArticle($articleId);
+                return "Article deleted";
+            } catch (Exception $e) {
+                error_log('Error: ' . $e->getMessage());
+                return "article deletion failed";
+            }
+        }
+    }
 }

@@ -25,10 +25,7 @@ $colors = [
     'rgb(244, 246, 249)'    // light
 ];
 
-foreach ($category_stats as $stat) {
-    $categories[] = $stat['category_name'];
-    $counts[] = $stat['article_count'];
-}
+
 
 ?>
 <!DOCTYPE html>
@@ -45,10 +42,10 @@ foreach ($category_stats as $stat) {
     <title>DevBlog - Dashboard</title>
 
     <!-- Custom fonts for this template-->
-    <!-- <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet"> -->
+        rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -92,7 +89,7 @@ foreach ($category_stats as $stat) {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Articles</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= getTableCount($mysqli, 'articles') ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 15 ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-newspaper fa-2x text-gray-300"></i>
@@ -110,7 +107,7 @@ foreach ($category_stats as $stat) {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Users</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= getTableCount($mysqli, 'users') ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 20 ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -128,7 +125,7 @@ foreach ($category_stats as $stat) {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tags
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= getTableCount($mysqli, 'tags') ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 13 ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-tags fa-2x text-gray-300"></i>
@@ -145,7 +142,7 @@ foreach ($category_stats as $stat) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Categories</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= getTableCount($mysqli, 'categories') ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 20 ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-folder fa-2x text-gray-300"></i>

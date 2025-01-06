@@ -69,75 +69,37 @@ class Article
         return $title;
     }
 
-    public function createArticle(string $title, string $content, string $picture, string $category, string $status, string $scheduleDate, int $author_id, array $tags): bool
-    {
-        try {
-            $categoryid = $this->getCategoryId($category);
-            if ($categoryid === null) {
-                throw new Exception("category id cannot be null");
-            }
-            $data = [
-                "title" => $title,
-                "slug" => $this->getSlug($title),
-                "content" => $content,
-                "featured_image" => $picture,
-                "category_id" => $categoryid,
-                "status" => $status,
-                "scheduled_date" => $scheduleDate,
-                "author_id" => $author_id
-            ];
-            $lastId = $this->basemodel->insertRecord($this->table, $data);
 
+
+    public function createArticle(array $data, array $tags)
+    {
+        $id = $this->basemodel->insertRecord($this->table, $data);
+
+        if ($id === 0) {
+            throw new Exception("Error inserting article");
+        }
+
+        if ($tags) {
             foreach ($tags as $tag) {
-                $this->basemodel->insertRecord('article_tags', ['article_id' => $lastId, 'tag_id' => $this->getTagId($tag)]);
+                $this->basemodel->insertRecord('article_tags', ['article_id' => $id, 'tag_id' => $this->getTagId($tag)]);
             }
-            return true;
-        } catch (Exception $e) {
-            error_log("Error creating the article: " . $e->getMessage());
-            return false;
         }
     }
 
 
-    public function updateArticle(int $id, string $title = null, string $content = null, string $picture = null, string $category = null, string $status = null, string $scheduleDate = null, array $tags = null): bool
+    public function updateArticle(int $id, array $data, array $tags)
     {
-        try {
-            $data = [];
+        $result = $this->basemodel->updateRecord($this->table, $data, $id);
 
-            if ($title) {
-                $data["title"] = $title;
-                $data["slug"] = $this->getSlug($title);
-            }
-            if ($content) {
-                $data["content"] = $content;
-            }
-            if ($picture) {
-                $data["featured_image"] = $picture;
-            }
-            if ($category) {
-                $data["category_id"] = $this->getCategoryId($category);
-            }
-            if ($status) {
-                $data["status"] = $status;
-            }
-            if ($scheduleDate) {
-                $data["scheduled_date"] = $scheduleDate;
-            }
+        if(!$result) {
+            throw new Exception("Error updating Article");
+        }
 
-            if (!empty($data)) {
-                $this->basemodel->updateRecord($this->table, $data, $id);
+        if ($tags) {
+            $this->basemodel->deleteRecord($this->table, $id, 'article_id');
+            foreach ($tags as $tag) {
+                $this->basemodel->insertRecord('article_tags', ['article_id' => $id, 'tag_id' => $this->getTagId($tag)]);
             }
-
-            if ($tags) {
-                $this->basemodel->deleteRecord('article_tags', $id, 'article_id');
-
-                foreach ($tags as $tag) {
-                    $this->basemodel->insertRecord('article_tags', ['article_id' => $id, 'tag_id' => $this->getTagId($tag)]);
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error updating the article" . $e->getMessage());
-            return false;
         }
     }
 
@@ -153,13 +115,13 @@ class Article
         }
     }
 
-    public function getArticlesByAuthor(int $author_id) : array
+    public function getArticlesByAuthor(int $author_id): array
     {
         $where = "author_id = $author_id";
         return $this->basemodel->selectRecords($this->table, '*', $where);
     }
 
-    public function getArticleById(int $article_id) : array
+    public function getArticleById(int $article_id): array
     {
         $where = "id = $article_id";
         $result =  $this->basemodel->selectRecords($this->table, '*', $where);

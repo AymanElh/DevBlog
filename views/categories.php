@@ -8,7 +8,10 @@ use Config\Database;
 use Classes\Category;
 
 $baseModel = new BaseModel(Database::connect());
-$cateogry = new Category($baseModel);
+$category = new Category($baseModel);
+
+$categoryHandler = new CategoryHandler($category);
+
 ?>
 
 
@@ -87,8 +90,7 @@ $cateogry = new Category($baseModel);
                                 <tbody>
                                     <!-- Loop through categories and display them -->
                                     <?php
-                                    $categoryHandler = new CategoryHandler($category);
-                                    // $categories = $categoryHandler->getAllCategories();
+                                    $categories = $categoryHandler->getAllCategories();
                                     foreach ($categories as $category) { ?>
                                         <tr>
                                             <td><?= $category['id']; ?></td>

@@ -62,4 +62,10 @@ class CategoryHandler
             $this->category->deleteCategory($id);
         }
     }
+
+    public function getAllCategories() 
+    {
+        $result = $this->category->getAllCategories();
+        return $result;
+    }
 }

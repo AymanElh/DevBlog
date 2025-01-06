@@ -62,7 +62,7 @@ $categoryHandler = new CategoryHandler($category);
                             <h6 class="m-0 font-weight-bold text-primary">Add New Category</h6>
                         </div>
                         <div class="card-body">
-                            <form action="addCategory.php" method="POST">
+                            <form action="" method="POST">
                                 <div class="form-group">
                                     <label for="category-name">Category Name</label>
                                     <input type="text" class="form-control" id="category-name" name="category-name" required>

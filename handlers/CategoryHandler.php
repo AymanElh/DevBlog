@@ -11,13 +11,13 @@ class CategoryHandler
 {
     private Category $category;
 
-    function __construct(Category $category) 
+    function __construct(Category $category)
     {
         $this->category = $category;
     }
 
 
-    public function addCategory() : bool
+    public function addCategory() : string
     {
 
         $name = $_POST['category-name'];
@@ -26,20 +26,21 @@ class CategoryHandler
         $name = stripslashes($name);
         $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
 
-        if(isset($_POST['add-category']) && $_SERVER['REQUEST_METHOD'] === 'POST')
-        {
+        if (isset($_POST['add-category']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             // check the category
-            if(strlen($name) < 3) {
-                return false;
+            if (strlen($name) < 3) {
+                return "Name is not valid";
             }
 
             // create category
             $this->category->createCategory($name);
-            return true;
+            header("Location: ../views/categories.php");
+            // return "Category added";
         }
+        return "added";
     }
 
-    public function updateCategory() : bool
+    public function updateCategory(): bool
     {
         $name = $_POST['category-name'];
 
@@ -47,10 +48,9 @@ class CategoryHandler
         $name = stripslashes($name);
         $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
 
-        if(isset($_POST['update-category']) && $_SERVER['REQUEST_METHOD'] === 'POST')
-        {
+        if (isset($_POST['update-category']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $category_id = $_POST['category_id'];
-            if(strlen($name) < 3) {
+            if (strlen($name) < 3) {
                 return false;
             }
 
@@ -61,15 +61,14 @@ class CategoryHandler
     public function deleteCategory()
     {
 
-        if(isset($_POST['delete-category']) && $_SERVER['REQUEST_METHOD'] === 'POST')
-        {
+        if (isset($_POST['delete-category']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $category_id = $_POST['category_id'];
 
             $this->category->deleteCategory($category_id);
         }
     }
 
-    public function getAllCategories() 
+    public function getAllCategories()
     {
         $result = $this->category->getAllCategories();
         return $result;

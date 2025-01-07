@@ -17,8 +17,11 @@ class CategoryHandler
     }
 
 
-    public function addCategory($name) : bool
+    public function addCategory() : bool
     {
+
+        $name = $_POST['category-name'];
+
         $name = trim($name);
         $name = stripslashes($name);
         $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
@@ -36,8 +39,10 @@ class CategoryHandler
         }
     }
 
-    public function updateCategory($name) : bool
+    public function updateCategory() : bool
     {
+        $name = $_POST['category-name'];
+
         $name = trim($name);
         $name = stripslashes($name);
         $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
@@ -53,13 +58,14 @@ class CategoryHandler
         }
     }
 
-    public function deleteCategory($id)
+    public function deleteCategory()
     {
+
         if(isset($_POST['delete-category']) && $_SERVER['REQUEST_METHOD'] === 'POST')
         {
             $category_id = $_POST['category_id'];
 
-            $this->category->deleteCategory($id);
+            $this->category->deleteCategory($category_id);
         }
     }
 }

@@ -11,55 +11,70 @@ class TagHandler
 {
     private Tag $tag;
 
-    function __construct(Tag $tag) 
+    function __construct(Tag $tag)
     {
         $this->tag = $tag;
     }
 
-
-    public function addTag($name) : bool
+    private function sanitizeInput($input): string
     {
-        $name = trim($name);
-        $name = stripslashes($name);
-        $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+        $input = trim($input);
+        $input = stripslashes($input);
+        $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+        return $input;
+    }
 
-        if(isset($_POST['add-tag']) && $_SERVER['REQUEST_METHOD'] === 'POST')
-        {
+    public function addTag(): bool
+    {
+
+        if (isset($_POST['add-tag']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $name = $this->sanitizeInput($_POST['tag-name']);
+
             // check the category
-            if(strlen($name) < 3) {
+            if (strlen($name) < 3) {
                 return false;
             }
 
             // create category
             $this->tag->createTag($name);
-            return true;
+            header("Location: ../views/tags.php");
         }
+        return true;
     }
 
-    public function updateTag($name) : bool
+    public function updateTag(): bool
     {
-        $name = trim($name);
-        $name = stripslashes($name);
-        $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
 
-        if(isset($_POST['update-tag']) && $_SERVER['REQUEST_METHOD'] === 'POST')
-        {
+        if (isset($_POST['update-tag']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = $this->sanitizeInput($_POST['name']);
+
             $tag_id = $_POST['tag_id'];
-            if(strlen($name) < 3) {
+            if (strlen($name) < 3) {
                 return false;
             }
 
             $this->tag->updateTag($tag_id, $name);
+            header("Location: ../views/tags.php");
+        }
+
+
+        return true;
+    }
+
+    public function deleteTag()
+    {
+        if (isset($_POST['delete-tag']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tag_id = (int)$_POST['tag_id'];
+
+            $this->tag->deleteTag($tag_id);
+            header("Location: ../views/tags.php");
         }
     }
 
-    public function deleteTag($id)
+    public function getAllTags()
     {
-        if(isset($_POST['delete-category']) && $_SERVER['REQUEST_METHOD'] === 'POST')
-        {
-            $tag_id = $_POST['tag_id'];
-
-            $this->tag->deleteTag($tag_id);
-        }
+        $result = $this->tag->getAllTags();
+        return $result;
     }
 }

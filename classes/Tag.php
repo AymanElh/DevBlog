@@ -12,36 +12,43 @@ use Classes\BaseModel;
 
 class Tag
 {
-    private BaseModel $dbHandler;
-    private $table = 'tags';
+    private static BaseModel $dbHandler;
+    private static $table = 'tags';
     private static $nbrOfTags = 0;
 
     function __construct(BaseModel $dbHandler)
     {
-        $this->dbHandler = $dbHandler;
+        self::$dbHandler = $dbHandler;
     }
 
-    public function createTag(string $name) : void
+    public static function createTag(string $name) : void
     {
-        $this->dbHandler->insertRecord($this->table, ['name' => $name]);
+        self::$dbHandler->insertRecord(self::$table, ['name' => $name]);
         self::$nbrOfTags++;
     }
 
-    public function deleteTag(int $id) : void
+    public static function deleteTag(int $id) : void
     {
-        $this->dbHandler->deleteRecord($this->table, $id);
+        self::$dbHandler->deleteRecord(self::$table, $id);
         self::$nbrOfTags--;
     }
 
-    public function updateTag(int $id, string $name) : void
+    public static function updateTag(int $id, string $name) : void
     {
-        $this->dbHandler->updateRecord($this->table, ['name' => $name], $id);
+        self::$dbHandler->updateRecord(self::$table, ['name' => $name], $id);
     }
 
-    public function getAllTags() : array
+    public static function getAllTags() : array
     {
-        $result = $this->dbHandler->selectRecords($this->table);
+        $result = self::$dbHandler->selectRecords(self::$table);
     
         return $result ?: [];
+    }
+
+    public static function getTagName(int $tag_id) : ?string
+    {
+        $where = "id = $tag_id";
+        $result = self::$dbHandler->selectRecords(self::$table, 'name', $where);
+        return $result[0]['name'];
     }
 }

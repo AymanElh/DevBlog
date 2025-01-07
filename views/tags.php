@@ -10,7 +10,7 @@ use Classes\Tag;
 $baseModel = new BaseModel(Database::connect());
 $tag = new Tag($baseModel);
 
-$tagHandler = new TagHandler($tag);
+$tagHandler = new TagHandler();
 $tags = $tagHandler->getAllTags();
 $tagHandler->addTag();
 $tagHandler->updateTag();

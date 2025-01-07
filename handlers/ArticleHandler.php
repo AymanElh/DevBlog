@@ -6,6 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Classes\Article;
 use Classes\BaseModel;
+use Classes\Tag;
 
 session_start();
 
@@ -14,13 +15,11 @@ use Exception;
 
 class ArticleHandler
 {
-    private BaseModel $basemodel;
     private Article $article;
 
-    function __construct(BaseModel $basemodel)
+    function __construct(Article $article)
     {
-        $this->basemodel = $basemodel;
-        $this->article = new Article($basemodel);
+        $this->article = $article;
     }
 
     private function sanitizeInput($input): string
@@ -151,5 +150,24 @@ class ArticleHandler
                 return "article deletion failed";
             }
         }
+    }
+
+    public function getAllArticles() : array
+    {
+        return $this->article->getAllArticles();
+    }
+    
+    public function getArticleTags(int $article_id) : array
+    {
+        $result =  $this->article->getArticleTags($article_id);
+        // echo "<pre>";
+        // var_dump($result[0]['tag_id']);
+        // echo "</pre>";
+        foreach($result as $tag) {
+            $tags[] = Tag::getTagName((int)$tag['tag_id']);
+        }
+        // var_dump($tags);
+
+        return $tags;
     }
 }

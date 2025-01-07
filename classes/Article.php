@@ -128,5 +128,23 @@ class Article
         return $result ? $result[0] : [];
     }
 
-    public static function getAllArticles() {}
+    public function getAllArticles() : array
+    {
+        $result = $this->basemodel->selectRecords($this->table);
+        if(!$result) {
+            return [];
+        }
+
+        return $result;
+    }
+
+    public function getArticleTags(int $article_id) : array
+    {
+        $where = "article_id = $article_id";
+        $result = $this->basemodel->selectRecords('article_tags', 'tag_id', $where);
+        if(!$result) {
+            return [];
+        }
+        return $result;
+    }
 }

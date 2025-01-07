@@ -9,12 +9,12 @@ use Classes\Tag;
 
 class TagHandler
 {
-    private Tag $tag;
+    // private Tag $tag;
 
-    function __construct(Tag $tag)
-    {
-        $this->tag = $tag;
-    }
+    // function __construct(Tag $tag)
+    // {
+    //     $this->tag = $tag;
+    // }
 
     private function sanitizeInput($input): string
     {
@@ -37,7 +37,7 @@ class TagHandler
             }
 
             // create category
-            $this->tag->createTag($name);
+            Tag::createTag($name);
             header("Location: ../views/tags.php");
         }
         return true;
@@ -54,7 +54,7 @@ class TagHandler
                 return false;
             }
 
-            $this->tag->updateTag($tag_id, $name);
+            Tag::updateTag($tag_id, $name);
             header("Location: ../views/tags.php");
         }
 
@@ -67,14 +67,14 @@ class TagHandler
         if (isset($_POST['delete-tag']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $tag_id = (int)$_POST['tag_id'];
 
-            $this->tag->deleteTag($tag_id);
+            Tag::deleteTag($tag_id);
             header("Location: ../views/tags.php");
         }
     }
 
     public function getAllTags()
     {
-        $result = $this->tag->getAllTags();
+        $result = Tag::getAllTags();
         return $result;
     }
 }

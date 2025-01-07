@@ -40,21 +40,32 @@ class CategoryHandler
         return "added";
     }
 
-    public function updateCategory(): bool
+    public function updateCategory()
     {
-        $name = $_POST['category-name'];
-
-        $name = trim($name);
-        $name = stripslashes($name);
-        $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
-
+        
         if (isset($_POST['update-category']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            $category_id = $_POST['category_id'];
+            
+            
+            $name = $_POST['name'];
+            $category_id = (int)$_POST['category_id'];
+
+            // echo "<pre>";
+            // var_dump($category_id, $name);
+            // echo "</pre>";
+            // die();
+    
+            $name = trim($name);
+            $name = stripslashes($name);
+            $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+
+
             if (strlen($name) < 3) {
-                return false;
+                echo "Category name is invalid";
+                header("Location: ../views/categories.php");
             }
 
             $this->category->updateCategory($category_id, $name);
+            header("Location: categories.php");
         }
     }
 
@@ -62,9 +73,21 @@ class CategoryHandler
     {
 
         if (isset($_POST['delete-category']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            $category_id = $_POST['category_id'];
+            
+            if(!isset($_POST['category_id']) && empty($_POST['category_id'])) {
+                echo "error on category id";
+                die();
+            }
+            
+            $category_id = (int)$_POST['category_id'];
 
-            $this->category->deleteCategory($category_id);
+            if ($category_id <= 0) {
+                echo "Error: Invalid category ID.";
+                return;
+            }
+
+            $result = $this->category->deleteCategory($category_id);
+                header("Location: ../views/categories.php");
         }
     }
 

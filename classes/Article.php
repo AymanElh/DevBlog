@@ -81,7 +81,7 @@ class Article
 
         if ($tags) {
             foreach ($tags as $tag) {
-                $this->basemodel->insertRecord('article_tags', ['article_id' => $id, 'tag_id' => $this->getTagId($tag)]);
+                $this->basemodel->insertRecord('article_tags', ['article_id' => $id, 'tag_id' => (int)$tag]);
             }
         }
     }

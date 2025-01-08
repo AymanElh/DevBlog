@@ -13,14 +13,18 @@ use Handlers\ArticleHandler;
 
 $baseModel = new BaseModel(Database::connect());
 
-$categoryHandler = new CategoryHandler(new Category($baseModel));
+$category = new Category($baseModel);
+$categoryHandler = new CategoryHandler($category);
 $categories = $categoryHandler->getAllCategories();
 
 $tagHandler = new TagHandler(new Tag($baseModel));
-$tags = Tag::getAllTags();
+$allTags = Tag::getAllTags();
+
 
 $articleHandler = new ArticleHandler(new Article($baseModel));
 $articles = $articleHandler->getAllArticles();
+$articleHandler->addArticle();
+
 
 ?>
 
@@ -99,11 +103,11 @@ $articles = $articleHandler->getAllArticles();
                                     $count = 1;
                                     foreach ($articles as $article) :
                                         $tags = $articleHandler->getArticleTags($article['id']);
-                                        // var_dump($tags);
+                                        $category_name = $category->getCategoryName($article['category_id']);
                                     ?>
                                         <td><?= $count++ ?></td>
                                         <td><?= htmlspecialchars($article['title']) ?></td>
-                                        <td><?= htmlspecialchars($article['category_id']) ?></td>
+                                        <td><?= htmlspecialchars($category_name) ?></td>
                                         <td><?= implode(' ', $tags) ?></td>
                                         <td><?= htmlspecialchars($article['author_id']) ?></td>
                                         <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
@@ -113,8 +117,88 @@ $articles = $articleHandler->getAllArticles();
                                             <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id']; ?>">Edit</button>
                                             <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteArticleModal<?= $article['id']; ?>">Delete</button>
                                         </td>
-                                    <?php endforeach; ?>
+                                        <div class="modal fade" id="editArticleModal<?= $article['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="editArticleModalLabel<?= $article['id'] ?>" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editArticleModalLabel<?= $article['id'] ?>">Edit Article</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form method="POST" action="" enctype="multipart/form-data">
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="article_id" value="<?= $article['id'] ?>">
+                                                            <!-- Title -->
+                                                            <div class="form-group">
+                                                                <label for="articleTitle<?= $article['id'] ?>">Title</label>
+                                                                <input type="text" class="form-control" id="articleTitle<?= $article['id'] ?>" name="title" value="<?= htmlspecialchars($article['title']) ?>" required>
+                                                            </div>
+                                                            <!-- Content -->
+                                                            <div class="form-group">
+                                                                <label for="articleContent<?= $article['id'] ?>">Content</label>
+                                                                <textarea class="form-control" id="articleContent<?= $article['id'] ?>" name="content" rows="5" required><?= htmlspecialchars($article['content']) ?></textarea>
+                                                            </div>
+                                                            <!-- Category -->
+                                                            <div class="form-group">
+                                                                <label for="articleCategory<?= $article['id'] ?>">Category</label>
+                                                                <select class="form-control" id="articleCategory<?= $article['id'] ?>" name="category" required>
+                                                                    <?php foreach ($categories as $category): ?>
+                                                                        <option value="<?= $category['id'] ?>" <?= $category['id'] == $article['category_id'] ? 'selected' : '' ?>>
+                                                                            <?= htmlspecialchars($category['name']) ?>
+                                                                        </option>
+                                                                    <?php endforeach; ?>
+                                                                </select>
+                                                            </div>
+                                                            <!-- Tags -->
+                                                            <div class="form-group">
+                                                                <label for="articleTags<?= $article['id'] ?>">Tags</label>
+                                                                <select class="form-control" id="articleTags<?= $article['id'] ?>" name="tags[]" multiple>
+                                                                    <?php foreach ($allTags as $tag): ?>
+                                                                        <option value="<?= $tag['id'] ?>" <?= in_array($tag['id'], $tags) ? 'selected' : '' ?>>
+                                                                            <?= htmlspecialchars($tag['name']) ?>
+                                                                        </option>
+                                                                    <?php endforeach; ?>
+                                                                </select>
+                                                            </div>
+                                                            <!-- Image -->
+                                                            <div class="form-group">
+                                                                <label for="articleImage<?= $article['id'] ?>">Image</label>
+                                                                <input type="file" class="form-control" id="articleImage<?= $article['id'] ?>" name="image" accept="image/*">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
 
+                                        <div class="modal fade" id="deleteArticleModal<?= $article['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="deleteArticleModalLabel<?= $article['id'] ?>" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteArticleModalLabel<?= $article['id'] ?>">Delete Article</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form method="POST" action="">
+                                                        <div class="modal-body">
+                                                            Are you sure you want to delete this article?
+                                                            <input type="hidden" name="article_id" value="<?= $article['id'] ?>">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
 
 
                                 </tbody>
@@ -137,7 +221,7 @@ $articles = $articleHandler->getAllArticles();
 
     <!-- Modal Form for Adding an Article -->
     <div class="modal fade" id="addArticleModal" tabindex="-1" role="dialog" aria-labelledby="addArticleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addArticleModalLabel">Add New Article</h5>
@@ -145,61 +229,65 @@ $articles = $articleHandler->getAllArticles();
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="../handlers/ArticleHandler.php" method="POST">
+                <form method="POST" action="" enctype="multipart/form-data">
                     <div class="modal-body">
+                        <!-- Title -->
                         <div class="form-group">
-                            <label for="article-title">Title</label>
-                            <input type="text" class="form-control" id="article-title" name="title" required>
+                            <label for="articleTitle">Title</label>
+                            <input type="text" class="form-control" id="articleTitle" name="article-title" placeholder="Enter article title" required>
                         </div>
-                        <div class="form-group ">
-                            <label for="article-content">Content</label>
-                            <textarea class="form-control" id="article-content" name="content" rows="4" required></textarea>
-                        </div>
+                        <!-- Content -->
                         <div class="form-group">
-                            <label for="article-image" class="form-label">Upload Article Image</label>
-                            <div class="custom-file-upload">
-                                <input type="file" id="article-image" class="form-control d-none" name="article-image" accept="image/*" required>
-                                <label for="article-image" class="btn btn-outline-primary w-100">
-                                    <i class="fas fa-upload"></i> Choose Image
-                                </label>
-                            </div>
+                            <label for="articleContent">Content</label>
+                            <textarea class="form-control" id="articleContent" name="article-content" rows="5" placeholder="Enter article content" required></textarea>
                         </div>
+                        <!-- Category -->
                         <div class="form-group">
-                            <label for="category-id">Category</label>
-                            <select class="form-control" id="category-id" name="category_id" required>
-                                <option value="" disabled selected>Select Category</option>
-                                <?php foreach ($categories as $category) : ?>
-                                    <option value="<?= $category['name'] ?>"><?= $category['name'] ?></option>
+                            <label for="articleCategory">Category</label>
+                            <select class="form-control" id="articleCategory" name="article-category" required>
+                                <option value="" disabled selected>Select category</option>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?= htmlspecialchars($category['name']); ?>">
+                                        <?= htmlspecialchars($category['name']); ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
+                        <!-- Tags -->
                         <div class="form-group">
-                            <label for="tags-select">Tags</label>
-                            <select class="form-select" multiple aria-label="multiple select example">
-                                <option selected>Open this select menu</option>
-                                <?php foreach ($tags as $tag) : ?>
-                                    <option value="<?= $tag['name'] ?>"><?= $tag['name'] ?></option>
+                            <label for="articleTags">Tags</label>
+                            <select class="form-control" id="articleTags" name="tags[]" multiple>
+                                <?php foreach ($allTags as $tag): ?>
+                                    <option value="<?= $tag['id'] ?>"><?= $tag['name'] ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            <small class="form-text text-muted">Hold Ctrl (or Cmd) to select multiple tags.</small>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="publish-date" class="form-label">Publish Date</label>
-                            <input type="date" id="publish-date" class="form-control" name="publish_date" required>
+                        <!-- Image -->
+                        <div class="form-group">
+                            <label for="articleImage">Image</label>
+                            <input type="file" class="form-control" id="article-image" name="article-img" accept="image/*">
                         </div>
-
-
-
+                        <!-- Scheule date -->
+                        <div class="form-group">
+                            <label for="articleImage">Date</label>
+                            <input type="date" class="form-control" id="schedule-date" name="schedule-date" accept="image/*">
+                        </div>
+                        <!-- Description -->
+                        <!-- <div class="form-group">
+                            <label for="articleDescription">Description</label>
+                            <textarea class="form-control" id="articleDescription" name="article-description" rows="3" placeholder="Short description of the article"></textarea>
+                        </div> -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" name="add-article">Add Article</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" name="add-article" class="btn btn-primary">Add Article</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>

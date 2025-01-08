@@ -56,7 +56,7 @@ $article = new Article($dbHandler);
 
 // echo $userId;
 
-$auth = new Auth($basemodel);
+// $auth = new Auth($basemodel);
 
-$result = $auth->signup("yassine", "username", "yassin@gmail.com", "123456");
-print_r($result);
+// $result = $auth->signup("yassine", "username", "yassin@gmail.com", "123456");
+// print_r($result);

@@ -51,4 +51,14 @@ class Category
     {
         return self::$nbrOfCategories;
     }
+
+    public function getCategoryName(int $category_id) : string
+    {
+        $where = "id = $category_id";
+        $result = $this->dbHandler->selectRecords($this->table, 'name', $where);
+        if($result) { 
+            return $result[0]['name'];
+        }
+        return "";
+    }
 }

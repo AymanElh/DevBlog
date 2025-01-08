@@ -9,6 +9,7 @@ use Classes\Tag;
 use Classes\User;
 use Classes\Admin;
 use Classes\Author;
+use Auth\Auth;
 // require_once __DIR__ . '/../classes/BaseModel.php';
 
 $conn = Database::connect();
@@ -55,3 +56,7 @@ $article = new Article($dbHandler);
 
 // echo $userId;
 
+$auth = new Auth($basemodel);
+
+$result = $auth->signup("yassine", "username", "yassin@gmail.com", "123456");
+print_r($result);

@@ -42,19 +42,19 @@ class Auth
             return $errors;
         }
 
-        if ($this->user->usernameExist($username) || $this->user->emailExist($email)) {
+        if ($this->user->emailExist($email)) {
             return "Username or email already exist";
         }
 
-        $password_hashed = password_hash($password, PASSWORD_BCRYPT);
+        $password_hashed = password_hash($password, PASSWORD_ARGON2I);
 
         try {
-            $this->user->createUser($name, $username, $email, $password_hashed, $bio, $pic);
+            $result = $this->user->createUser($name, $username, $email, $password_hashed, $bio, $pic);
             return "Account created successfully";
         }
         catch(Exception $e) {
             error_log("Invalid sing up: " . $e->getMessage());
-            return "Account createtion failes";
+            return "Account createtion failed";
         }
     }
 

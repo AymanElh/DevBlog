@@ -27,7 +27,6 @@ class BaseModel
         $placeholders = implode(',', array_fill(0, count($data), '?'));
 
         $sql = "INSERT INTO $table($columns) VALUES($placeholders)";
-
         try {
             $stmt = $this->db->prepare($sql);
 

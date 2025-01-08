@@ -79,7 +79,7 @@ class Auth
 
         $user = User::getUser($email);
         if (!$user) {
-            return "No user fount with this email";
+            return "";
         }
         
         if (password_verify($password, $user[0]['password_hash'])) {
@@ -89,11 +89,12 @@ class Auth
 
             return "Login added successfully";
         }
-        return "Invalid password";
+        return "";
     }
 
     public function logout() 
     {
+        session_start();
         session_unset();
         session_destroy();
     }

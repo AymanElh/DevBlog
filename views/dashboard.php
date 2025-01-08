@@ -2,13 +2,10 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Config\Database;
+use Classes\BaseModel;
+use Auth\Auth;
 
-
-// $mysqli = connect_db();
-// $articles = get_all_articles($mysqli);
-// $category_stats = get_category_stats($mysqli);
-// $top_users = get_top_users($mysqli);
-// $top_articles = get_top_articles($mysqli);
 
 // Prepare data for the chart
 $categories = [];
@@ -25,6 +22,15 @@ $colors = [
     'rgb(244, 246, 249)'    // light
 ];
 
+
+$baseModel = new BaseModel(Database::connect());
+$auth = new Auth($baseModel);
+
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    $auth->logout();
+    header("Location: login.php");
+    exit();
+}
 
 
 ?>
@@ -419,7 +425,7 @@ $colors = [
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
+                    <a class="btn btn-primary" href="?action=logout">Logout</a>
                 </div>
             </div>
         </div>

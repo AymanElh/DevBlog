@@ -30,8 +30,8 @@ $dbHandler = new BaseModel($conn);
 //     'author_id' => 1
 // ];
 
-$article = new Article($dbHandler);
-$article->createArticle('computer science', 'some content', '20240232', 2,  1, 'cs-it', '/uploads/img', ['8']);
+// $article = new Article($dbHandler);
+// $article->createArticle('computer science', 'some content', '20240232', 2,  1, 'cs-it', '/uploads/img', ['8']);
 
 // $article->updateArticle(
 //     3, 

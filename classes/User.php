@@ -7,7 +7,7 @@ namespace Classes;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/error_config.php';
 
-
+use Config\Database;
 use Classes\BaseModel;
 
 class User
@@ -17,7 +17,7 @@ class User
 
     function __construct(BaseModel $basemodel)
     {
-        self::$basemodel = $basemodel;
+        self::$basemodel = new BaseModel(Database::connect());
         self::$table = 'users';
     }
 
@@ -61,6 +61,11 @@ class User
         return $email ?: [];
     }
 
+    public static function getAllUsers() : array
+    {
+        return self::$basemodel->selectRecords(self::$table);
+    }
+
     public static function getCountUsers() : int 
     {
         $result = self::$basemodel->selectRecords(self::$table, 'COUNT(*) AS TotalUsers');
@@ -87,6 +92,16 @@ class User
         } catch (\Exception $e) {
             error_log("Error in getAuthorName: " . $e->getMessage());
             return "Error Fetching Author";
+        }
+    }
+
+    public static function checkRole(string $role)
+    {
+        // session_start();
+        if($role === "admin" || $role === "author") {
+            header("Location: ../views/dashboard.php");
+        } else if ($role === 'guest') {
+            header("Location: ../public/index.php");
         }
     }
     

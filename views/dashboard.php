@@ -26,12 +26,11 @@ $colors = [
     'rgb(244, 246, 249)'    // light
 ];
 
-
 $baseModel = new BaseModel(Database::connect());
-$auth = new Auth($baseModel);
 $article = new Article($baseModel);
 $category = new Category($baseModel);
 
+$auth = new Auth($baseModel);
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     $auth->logout();
     header("Location: login.php");
@@ -40,6 +39,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 
 $topAuthors = Article::topAuthors();
 // var_dump($topAuthors);
+// var_dump($_SESSION['user']['role']);
+// User::checkRole('admin');
 ?>
 <!DOCTYPE html>
 <html lang="en">

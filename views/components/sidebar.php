@@ -13,8 +13,8 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == '../dasboard.php' ? 'active' : '' ?>">
-        <a class="nav-link" href="../dashboard.php
+    <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'dasboard.php' ? 'active' : '' ?>">
+        <a class="nav-link" href="/views/
         ">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
@@ -101,7 +101,7 @@
             <div id="collapseAuthors" class="collapse" aria-labelledby="headingAuthors" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Author Management:</h6>
-                    <a class="collapse-item" href="authors.php">View All Authors</a>
+                    <a class="collapse-item" href="users.php">View All Authors</a>
                     <a class="collapse-item" href="add-author.php">Add New Author</a>
                     <a class="collapse-item" href="author-roles.php">Manage Roles</a>
                 </div>

@@ -6,6 +6,7 @@ use Classes\BaseModel;
 use Classes\User;
 use Config\Database;
 use Auth\Auth;
+use Handlers\UserHandler;
 
 $baseModel = new BaseModel(Database::connect());
 
@@ -18,20 +19,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 
 $users = User::getAllUsers();
 
-// // Fetch Authors and Normal Users
-// $authors = $user->getUsersByRole('author');
-// $normalUsers = $user->getUsersByRole('guest');
+$userHandler = new UserHandler();
 
-// // Handle Add, Edit, and Delete User (logic should be implemented in User class)
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     if (isset($_POST['add-user'])) {
-//         $user->addUser($_POST);
-//     } elseif (isset($_POST['update-user'])) {
-//         $user->updateUser($_POST);
-//     } elseif (isset($_POST['delete-user'])) {
-//         $user->deleteUser($_POST['user_id']);
-//     }
-// }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $userHandler->updateUser();
+    $userHandler->deleteUser();
+    $userHandler->changeUserRole();
+}
 
 ?>
 
@@ -117,7 +111,7 @@ $users = User::getAllUsers();
 
                                                         <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
                                                         <option value="author" <?= $user['role'] === 'author' ? 'selected' : '' ?>>Author</option>
-                                                        <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>User</option>
+                                                        <option value="guest" <?= $user['role'] === 'guest' ? 'selected' : '' ?>>User</option>
                                                     </select>
                                                 </form>
                                             </td>
@@ -176,7 +170,7 @@ $users = User::getAllUsers();
                                                     <form method="POST">
                                                         <div class="modal-body">
                                                             <p>Are you sure you want to delete <?= htmlspecialchars($author['full_name']); ?>?</p>
-                                                            <input type="hidden" name="user_id" value="<?= $author['id']; ?>">
+                                                            <input type="hidden" name="user_id" value="<?= $user['id']; ?>">
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

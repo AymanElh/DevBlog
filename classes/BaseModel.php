@@ -84,7 +84,7 @@ class BaseModel
                 error_log("error preparing statment: " . implode(', ', $this->db->errorInfo()));
                 return false;
             }
-
+            var_dump("HELLOOD");
             return $stmt->execute([$id]);
         }
         catch(PDOException $e) {

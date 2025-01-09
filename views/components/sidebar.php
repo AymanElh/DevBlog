@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../dashboard.php">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-blog"></i>
         </div>
@@ -13,8 +13,9 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
-        <a class="nav-link" href="index.php">
+    <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'dasboard.php' ? 'active' : '' ?>">
+        <a class="nav-link" href="/views/
+        ">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
@@ -46,36 +47,38 @@
     </li>
 
     <!-- Nav Item - Categories -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategories"
-            aria-expanded="true" aria-controls="collapseCategories">
-            <i class="fas fa-fw fa-folder"></i>
-            <span>Categories</span>
-        </a>
-        <div id="collapseCategories" class="collapse" aria-labelledby="headingCategories" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Category Management:</h6>
-                <a class="collapse-item" href="categories.php">View All Categories</a>
-                <a class="collapse-item" href="add-category.php">Add New Category</a>
+    <?php if ($_SESSION['user']['role'] === 'admin'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategories"
+                aria-expanded="true" aria-controls="collapseCategories">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Categories</span>
+            </a>
+            <div id="collapseCategories" class="collapse" aria-labelledby="headingCategories" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Category Management:</h6>
+                    <a class="collapse-item" href="categories.php">View All Categories</a>
+                    <a class="collapse-item" href="add-category.php">Add New Category</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
 
-    <!-- Nav Item - Tags -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTags"
-            aria-expanded="true" aria-controls="collapseTags">
-            <i class="fas fa-fw fa-tags"></i>
-            <span>Tags</span>
-        </a>
-        <div id="collapseTags" class="collapse" aria-labelledby="headingTags" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Tag Management:</h6>
-                <a class="collapse-item" href="tags.php">View All Tags</a>
-                <a class="collapse-item" href="add-tag.php">Add New Tag</a>
+        <!-- Nav Item - Tags -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTags"
+                aria-expanded="true" aria-controls="collapseTags">
+                <i class="fas fa-fw fa-tags"></i>
+                <span>Tags</span>
+            </a>
+            <div id="collapseTags" class="collapse" aria-labelledby="headingTags" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Tag Management:</h6>
+                    <a class="collapse-item" href="tags.php">View All Tags</a>
+                    <a class="collapse-item" href="add-tag.php">Add New Tag</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
+    <?php endif; ?>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -86,22 +89,25 @@
     </div>
 
     <!-- Nav Item - Authors -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAuthors"
-            aria-expanded="true" aria-controls="collapseAuthors">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Authors</span>
-        </a>
-        <div id="collapseAuthors" class="collapse" aria-labelledby="headingAuthors" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Author Management:</h6>
-                <a class="collapse-item" href="authors.php">View All Authors</a>
-                <a class="collapse-item" href="add-author.php">Add New Author</a>
-                <a class="collapse-item" href="author-roles.php">Manage Roles</a>
+     
+    <?php
+    if ($_SESSION['user']['role'] === 'admin') : ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAuthors"
+                aria-expanded="true" aria-controls="collapseAuthors">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Authors</span>
+            </a>
+            <div id="collapseAuthors" class="collapse" aria-labelledby="headingAuthors" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Author Management:</h6>
+                    <a class="collapse-item" href="users.php">View All Authors</a>
+                    <a class="collapse-item" href="add-author.php">Add New Author</a>
+                    <a class="collapse-item" href="author-roles.php">Manage Roles</a>
+                </div>
             </div>
-        </div>
-    </li>
-
+        </li>
+    <?php endif; ?>
     <!-- Nav Item - Comments -->
     <li class="nav-item">
         <a class="nav-link" href="comments.php">

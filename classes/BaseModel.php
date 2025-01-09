@@ -27,18 +27,21 @@ class BaseModel
         $placeholders = implode(',', array_fill(0, count($data), '?'));
 
         $sql = "INSERT INTO $table($columns) VALUES($placeholders)";
+        // var_dump($sql);
         try {
             $stmt = $this->db->prepare($sql);
 
             if (!$stmt) {
                 return 0;
             }
-            
+    
+
             $stmt->execute(array_values($data));
 
         return (int)$this->db->lastInsertId();
         } catch (PDOException $e) {
             error_log($e->getMessage());
+            echo "Error inserting: " . $e->getMessage();
             return 0;
         }
     }
@@ -90,7 +93,7 @@ class BaseModel
         }
     }
 
-    public function selectRecords(string $table, string $columns = '*', string $where = null) : array|bool
+    public function selectRecords(string $table, string $columns = '*', string $where = null, array $args = []) : array|bool
     {
         $sql = "SELECT $columns FROM $table";
 
@@ -106,12 +109,11 @@ class BaseModel
                 return false;
             }
 
-            if($stmt->execute()) {
+            if($stmt->execute($args)) {
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 return false;
             }
-
             return $result;
         }
         catch (PDOException $e) {

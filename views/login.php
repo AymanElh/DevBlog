@@ -2,9 +2,9 @@
 // Include necessary files and initialize authentication
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Auth\Auth;
 use Config\Database;
 use Classes\BaseModel;
+use Auth\Auth;
 
 $baseModel = new BaseModel(Database::connect());
 $auth = new Auth($baseModel);
@@ -12,15 +12,30 @@ $auth = new Auth($baseModel);
 $email = $password = "";
 $message = "";
 
+session_start();
+if(isset($_SESSION['user'])) {
+    // echo "<pre>";
+    // var_dump($_SESSION);
+    // echo "</pre>";
+    // die();
+    header("Location: dashboard.php");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = $_POST['email'];
     $password = $_POST['password'];
 
     $message = $auth->login($email, $password);
-    echo $message;
-    die();
-    header("Location: ../views/dashboard.php");
+
+    if($message === "Login added successfully") {
+        header("Location: dashboard.php");
+        exit;
+    } else {
+        $message = "Invalid email or password";
+    }
+    
 }
 ?>
 
@@ -59,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
@@ -101,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <a class="small" href="forgot-password.php">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="register.php">Create an Account!</a>
+                                        <a class="small" href="signup.php">Create an Account!</a>
                                     </div>
                                 </div>
                             </div>

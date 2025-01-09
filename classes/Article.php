@@ -9,7 +9,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Classes\BaseModel;
 use DateTime;
+use Config\Database;
 use Exception;
+use PDO;
 
 class Article
 {
@@ -71,8 +73,20 @@ class Article
 
 
 
-    public function createArticle(array $data, array $tags)
+    public function createArticle($title, $content, $filePath, $categoryId, $scheduledDate, $author, $tags)
     {
+        
+        $data = [
+                'title' => $title,
+                'content' => $content,
+                'featured_image' => $filePath,
+                'category_id' => $categoryId,
+                // 'status' => $status,
+                'scheduled_date' => $scheduledDate,
+                'author_id' => $author,
+                'slug' => $this->getSlug($title)
+            ];
+
         $id = $this->basemodel->insertRecord($this->table, $data);
 
         if ($id === 0) {
@@ -87,8 +101,20 @@ class Article
     }
 
 
-    public function updateArticle(int $id, array $data, array $tags)
+
+    public function updateArticle(string $title, string $content, string $filePath, int $categoryId, string $scheduledDate, int $author, int $id, array $tags)
     {
+
+        $data = [
+                'title' => $title,
+                'content' => $content,
+                'featured_image' => $filePath,
+                'category_id' => $categoryId,
+                'scheduled_date' => $scheduledDate,
+                'author_id' => $author,
+                'slug' => $this->getSlug($title),
+            ];
+            
         $result = $this->basemodel->updateRecord($this->table, $data, $id);
 
         if(!$result) {
@@ -146,5 +172,32 @@ class Article
             return [];
         }
         return $result;
+    }
+
+    public function getCountArticles() : int
+    {
+        $result = $this->basemodel->selectRecords($this->table, 'COUNT(*) AS TotalArticles');
+        return $result ? $result[0]['TotalArticles'] : 0;
+    }
+
+
+    public static function topAuthors() : ? array
+    {
+        $query = "SELECT users.full_name, COUNT(articles.id) AS totalArticles FROM articles
+                    JOIN users ON users.id = articles.author_id
+                    WHERE users.role LIKE 'author'
+                    GROUP BY author_id
+                    ORDER BY totalArticles";
+
+        $stmt = (Database::connect())->prepare($query);
+
+        if($stmt->execute()) {
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return null;
+        }
+
+        return $result ?: [];
+        
     }
 }

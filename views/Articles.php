@@ -7,12 +7,22 @@ use Classes\Category;
 use Classes\Tag;
 use Classes\Article;
 use Config\Database;
+use Classes\User;
 use Handlers\CategoryHandler;
 use Handlers\TagHandler;
 use Handlers\ArticleHandler;
+use Auth\Auth;
 
 $baseModel = new BaseModel(Database::connect());
 
+$auth = new Auth($baseModel);
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    $auth->logout();
+    header("Location: login.php");
+    exit();
+}
+
+$user = new User($baseModel);
 $category = new Category($baseModel);
 $categoryHandler = new CategoryHandler($category);
 $categories = $categoryHandler->getAllCategories();
@@ -24,8 +34,8 @@ $allTags = Tag::getAllTags();
 $articleHandler = new ArticleHandler(new Article($baseModel));
 $articles = $articleHandler->getAllArticles();
 $articleHandler->addArticle();
-
-
+$articleHandler->deleteArticle();
+$articleHandler->updateArticle();
 ?>
 
 <!DOCTYPE html>
@@ -103,20 +113,22 @@ $articleHandler->addArticle();
                                     $count = 1;
                                     foreach ($articles as $article) :
                                         $tags = $articleHandler->getArticleTags($article['id']);
-                                        $category_name = $category->getCategoryName($article['category_id']);
+
                                     ?>
-                                        <td><?= $count++ ?></td>
-                                        <td><?= htmlspecialchars($article['title']) ?></td>
-                                        <td><?= htmlspecialchars($category_name) ?></td>
-                                        <td><?= implode(' ', $tags) ?></td>
-                                        <td><?= htmlspecialchars($article['author_id']) ?></td>
-                                        <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
-                                        <td><?= htmlspecialchars($article['status']) ?></td>
-                                        <td><?= htmlspecialchars($article['views']) ?></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id']; ?>">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteArticleModal<?= $article['id']; ?>">Delete</button>
-                                        </td>
+                                        <tr>
+                                            <td><?= $count++ ?></td>
+                                            <td><?= htmlspecialchars($article['title']) ?></td>
+                                            <td>Science</td>
+                                            <td><?= implode(' ', $tags) ?></td>
+                                            <td><?= User::getAuthorName($article['author_id']) ?></td>
+                                            <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
+                                            <td><?= htmlspecialchars($article['status']) ?></td>
+                                            <td><?= htmlspecialchars($article['views']) ?></td>
+                                            <td>
+                                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id']; ?>">Edit</button>
+                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteArticleModal<?= $article['id']; ?>">Delete</button>
+                                            </td>
+                                        </tr>
                                         <div class="modal fade" id="editArticleModal<?= $article['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="editArticleModalLabel<?= $article['id'] ?>" aria-hidden="true">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content">
@@ -169,7 +181,7 @@ $articleHandler->addArticle();
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                            <button type="submit" name="update-article" class="btn btn-primary">Save Changes</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -192,19 +204,17 @@ $articleHandler->addArticle();
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                            <button type="submit" name="delete-article" class="btn btn-danger">Delete</button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php endforeach; ?>
-
-
-                                </tbody>
-                            </table>
                         </div>
                     </div>
+                <?php endforeach; ?>
+                </tbody>
+                </table>
 
                 </div>
                 <!-- /.container-fluid -->
@@ -284,6 +294,25 @@ $articleHandler->addArticle();
                         <button type="submit" name="add-article" class="btn btn-primary">Add Article</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="?action=logout">Logout</a>
+                </div>
             </div>
         </div>
     </div>

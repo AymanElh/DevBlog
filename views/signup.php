@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signup'])) {
     $pic = $_FILES['pic']['name'] ?? "";
 
     $message = $auth->signup($name, $username, $email, $password, $bio, $pic);
-}
+    header("Location: ../views/login.php");}
 ?>
 
 <!DOCTYPE html>

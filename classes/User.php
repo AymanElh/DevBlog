@@ -7,7 +7,7 @@ namespace Classes;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/error_config.php';
 
-
+use Config\Database;
 use Classes\BaseModel;
 
 class User
@@ -17,7 +17,7 @@ class User
 
     function __construct(BaseModel $basemodel)
     {
-        self::$basemodel = $basemodel;
+        self::$basemodel = new BaseModel(Database::connect());
         self::$table = 'users';
     }
 
@@ -60,4 +60,49 @@ class User
         $email = self::$basemodel->selectRecords(self::$table, '*', $where);
         return $email ?: [];
     }
+
+    public static function getAllUsers() : array
+    {
+        return self::$basemodel->selectRecords(self::$table);
+    }
+
+    public static function getCountUsers() : int 
+    {
+        $result = self::$basemodel->selectRecords(self::$table, 'COUNT(*) AS TotalUsers');
+        return $result ? $result[0]['TotalUsers'] : 0;
+    }
+
+    public static function getAuthorName(int $id): string
+    {
+        if ($id <= 0) {
+            error_log("Invalid author ID: $id");
+            return "Unknown Author";
+        }
+    
+        try {
+            $where = "id = ?";
+            $result = self::$basemodel->selectRecords(self::$table, 'full_name', $where, [$id]);
+    
+            if ($result && isset($result[0]['full_name'])) {
+                return $result[0]['full_name'];
+            } else {
+                error_log("No author found for ID: $id");
+                return "Unknown Author";
+            }
+        } catch (\Exception $e) {
+            error_log("Error in getAuthorName: " . $e->getMessage());
+            return "Error Fetching Author";
+        }
+    }
+
+    public static function checkRole(string $role)
+    {
+        // session_start();
+        if($role === "admin" || $role === "author") {
+            header("Location: ../views/dashboard.php");
+        } else if ($role === 'guest') {
+            header("Location: ../public/index.php");
+        }
+    }
+    
 }

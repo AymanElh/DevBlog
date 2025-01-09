@@ -66,4 +66,28 @@ class User
         $result = self::$basemodel->selectRecords(self::$table, 'COUNT(*) AS TotalUsers');
         return $result ? $result[0]['TotalUsers'] : 0;
     }
+
+    public static function getAuthorName(int $id): string
+    {
+        if ($id <= 0) {
+            error_log("Invalid author ID: $id");
+            return "Unknown Author";
+        }
+    
+        try {
+            $where = "id = ?";
+            $result = self::$basemodel->selectRecords(self::$table, 'full_name', $where, [$id]);
+    
+            if ($result && isset($result[0]['full_name'])) {
+                return $result[0]['full_name'];
+            } else {
+                error_log("No author found for ID: $id");
+                return "Unknown Author";
+            }
+        } catch (\Exception $e) {
+            error_log("Error in getAuthorName: " . $e->getMessage());
+            return "Error Fetching Author";
+        }
+    }
+    
 }

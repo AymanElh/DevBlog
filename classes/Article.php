@@ -102,8 +102,19 @@ class Article
 
 
 
-    public function updateArticle(int $id, array $data, array $tags)
+    public function updateArticle(string $title, string $content, string $filePath, int $categoryId, string $scheduledDate, int $author, int $id, array $tags)
     {
+
+        $data = [
+                'title' => $title,
+                'content' => $content,
+                'featured_image' => $filePath,
+                'category_id' => $categoryId,
+                'scheduled_date' => $scheduledDate,
+                'author_id' => $author,
+                'slug' => $this->getSlug($title),
+            ];
+            
         $result = $this->basemodel->updateRecord($this->table, $data, $id);
 
         if(!$result) {

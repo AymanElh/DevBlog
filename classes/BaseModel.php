@@ -93,7 +93,7 @@ class BaseModel
         }
     }
 
-    public function selectRecords(string $table, string $columns = '*', string $where = null) : array|bool
+    public function selectRecords(string $table, string $columns = '*', string $where = null, array $args = []) : array|bool
     {
         $sql = "SELECT $columns FROM $table";
 
@@ -109,12 +109,11 @@ class BaseModel
                 return false;
             }
 
-            if($stmt->execute()) {
+            if($stmt->execute($args)) {
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 return false;
             }
-
             return $result;
         }
         catch (PDOException $e) {

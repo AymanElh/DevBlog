@@ -80,15 +80,20 @@ class ArticleHandler
         }
     }
 
-    public function updateArticle($articleId): bool
+    public function updateArticle()
     {
         if (isset($_POST['update-article']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $articleId = $_POST['article_id'];
+
             $title = $this->sanitizeInput($_POST['article-title']);
             $content = $this->sanitizeInput($_POST['article-content']);
-            $category = $_POST['category'];
-            $status = $_POST['status'];
+            $category = $_POST['article-category'];
+            $tags = isset($_POST['tags']) ? $_POST['tags'] : [];
+
+            // $status = $_POST['article-status'];
             $scheduledDate = $_POST['schedule-date'];
-            $tags = $_POST['tags'];
+            // $articleDescription = $_POST['article-description'];
+            $author = $_SESSION['user']['id'];
 
 
             if (strlen($title) < 3 || strlen($content) < 10) {
@@ -112,20 +117,20 @@ class ArticleHandler
                 return 'Invalid category.';
             }
 
-            $slug = Article::getSlug($title);
-            $data = [
-                'title' => $title,
-                'content' => $content,
-                'image_path' => $filePath,
-                'category_id' => $categoryId,
-                'status' => $status,
-                'scheduled_date' => $scheduledDate,
-                'slug' => $slug,
-            ];
+            // $slug = Article::getSlug($title);
+            // $data = [
+            //     'title' => $title,
+            //     'content' => $content,
+            //     'image_path' => $filePath,
+            //     'category_id' => $categoryId,
+            //     'status' => $status,
+            //     'scheduled_date' => $scheduledDate,
+            //     'slug' => $slug,
+            // ];
 
             try {
-                $this->article->updateArticle($articleId, $data, $tags);
-                return true;
+                $this->article->updateArticle($title, $content, $filePath, $categoryId, $scheduledDate, $author, $articleId, $tags);
+                header("Location: ../views/articles.php");
             } catch (Exception $e) {
                 error_log('Error: ' . $e->getMessage());
                 return false;
@@ -133,15 +138,15 @@ class ArticleHandler
         }
     }
 
-    public function deleteArticle(int $articleId): string
+    public function deleteArticle()
     {
         if (isset($_POST['delete-article']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $articleId = $_POST['article_id'];            
             try {
                 $this->article->deleteArticle($articleId);
-                return "Article deleted";
+                header("Location: ../views/articles.php");
             } catch (Exception $e) {
                 error_log('Error: ' . $e->getMessage());
-                return "article deletion failed";
             }
         }
     }

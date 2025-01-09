@@ -7,12 +7,14 @@ use Classes\Category;
 use Classes\Tag;
 use Classes\Article;
 use Config\Database;
+use Classes\User;
 use Handlers\CategoryHandler;
 use Handlers\TagHandler;
 use Handlers\ArticleHandler;
 
 $baseModel = new BaseModel(Database::connect());
 
+$user = new User($baseModel);
 $category = new Category($baseModel);
 $categoryHandler = new CategoryHandler($category);
 $categories = $categoryHandler->getAllCategories();
@@ -24,8 +26,8 @@ $allTags = Tag::getAllTags();
 $articleHandler = new ArticleHandler(new Article($baseModel));
 $articles = $articleHandler->getAllArticles();
 $articleHandler->addArticle();
-
-
+$articleHandler->deleteArticle();
+$articleHandler->updateArticle();
 ?>
 
 <!DOCTYPE html>
@@ -110,7 +112,7 @@ $articleHandler->addArticle();
                                             <td><?= htmlspecialchars($article['title']) ?></td>
                                             <td>Science</td>
                                             <td><?= implode(' ', $tags) ?></td>
-                                            <td><?= htmlspecialchars($article['author_id']) ?></td>
+                                            <td><?= User::getAuthorName($article['author_id']) ?></td>
                                             <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
                                             <td><?= htmlspecialchars($article['status']) ?></td>
                                             <td><?= htmlspecialchars($article['views']) ?></td>
@@ -171,7 +173,7 @@ $articleHandler->addArticle();
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                            <button type="submit" name="update-article" class="btn btn-primary">Save Changes</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -194,7 +196,7 @@ $articleHandler->addArticle();
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                            <button type="submit" name="delete-article" class="btn btn-danger">Delete</button>
                                                         </div>
                                                     </form>
                                                 </div>

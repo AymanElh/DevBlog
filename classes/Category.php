@@ -17,7 +17,7 @@ class Category
     private $table = 'categories';
 
     function __construct(BaseModel $dbHandler) {
-        var_dump($dbHandler);
+        // var_dump($dbHandler);
         $this->dbHandler = $dbHandler;
     }
 
@@ -56,9 +56,20 @@ class Category
     {
         $where = "id = $category_id";
         $result = $this->dbHandler->selectRecords($this->table, 'name', $where);
+        echo "<pre>";
+
+        var_dump($result[0]['name']);
+        echo "</pre>";
+
         if($result) { 
             return $result[0]['name'];
         }
         return "";
+    }
+
+    public function getCountCategories() : int 
+    {
+        $result = $this->dbHandler->selectRecords($this->table, 'COUNT(*) AS TotalCategories');
+        return $result ? $result[0]['TotalCategories'] : 0;
     }
 }

@@ -4,6 +4,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Config\Database;
 use Classes\BaseModel;
+use Classes\Article;
+use Classes\User;
+use Classes\Tag;
+use Classes\Category;
 use Auth\Auth;
 
 
@@ -25,6 +29,8 @@ $colors = [
 
 $baseModel = new BaseModel(Database::connect());
 $auth = new Auth($baseModel);
+$article = new Article($baseModel);
+$category = new Category($baseModel);
 
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     $auth->logout();
@@ -32,7 +38,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     exit();
 }
 
-
+$topAuthors = Article::topAuthors();
+// var_dump($topAuthors);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,6 +65,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     <!-- Custom styles for this template-->
     <link href="../public/assets/css/sb-admin-2.css" rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body id="page-top">
@@ -95,7 +103,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Articles</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 15 ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $article->getCountArticles(); ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-newspaper fa-2x text-gray-300"></i>
@@ -113,7 +121,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Users</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 20 ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= User::getCountUsers(); ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -131,7 +139,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tags
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 13 ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 15 ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-tags fa-2x text-gray-300"></i>
@@ -148,7 +156,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Categories</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 20 ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $category->getCountCategories(); ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-folder fa-2x text-gray-300"></i>
@@ -183,7 +191,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <?php foreach ($top_users as $index => $user): ?>
+                                    <?php foreach ($topAuthors as $index => $user): ?>
                                         <div class="d-flex align-items-center mb-3">
                                             <div class="mr-3">
                                                 <div class="icon-circle bg-primary text-white">
@@ -328,7 +336,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+                                    <!-- <tfoot>
                                         <tr>
                                             <th>Title</th>
                                             <th>Author</th>
@@ -338,7 +346,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                                             <th>Created At</th>
                                             <th>Actions</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody>
                                         <?php foreach ($articles as $article): ?>
                                             <tr>
@@ -447,6 +455,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+    
     <!-- Initialize the pie chart -->
     <script>
         // Set new default font family and font color to mimic Bootstrap's default styling
@@ -496,6 +505,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
             },
         });
     </script>
+
 
     <!-- Page level plugins -->
     <script src="../public/vendor/datatables/jquery.dataTables.min.js"></script>

@@ -60,4 +60,10 @@ class User
         $email = self::$basemodel->selectRecords(self::$table, '*', $where);
         return $email ?: [];
     }
+
+    public static function getCountUsers() : int 
+    {
+        $result = self::$basemodel->selectRecords(self::$table, 'COUNT(*) AS TotalUsers');
+        return $result ? $result[0]['TotalUsers'] : 0;
+    }
 }

@@ -37,12 +37,11 @@ class ArticleHandler
             $content = $this->sanitizeInput($_POST['article-content']);
             $category = $_POST['article-category'];
             $tags = isset($_POST['tags']) ? $_POST['tags'] : [];
-            echo "Tags: ";
-            var_dump($tags);
+
             // $status = $_POST['article-status'];
             $scheduledDate = $_POST['schedule-date'];
             // $articleDescription = $_POST['article-description'];
-            $author = 1;
+            $author = $_SESSION['user']['id'];
 
             // if (strlen($title) < 3 || strlen($content) < 100) {
             //     echo $title . '<br>'; 
@@ -62,33 +61,18 @@ class ArticleHandler
                     return 'Error uploading the file.';
                 }
             }
-
+        
             $categoryId = $this->article->getCategoryId($category);
             if (!$category) {
                 return "Invalid Category";
             }
 
-            $slug = Article::getSlug($title);
 
-            $data = [
-                'title' => $title,
-                'content' => $content,
-                'image_path' => $filePath,
-                'category_id' => $categoryId,
-                // 'status' => $status,
-                'scheduled_date' => $scheduledDate,
-                'author_id' => $author,
-                'slug' => $slug,
-            ];
-
-            echo "<pre>";
-            var_dump($data);
-            echo "</pre>";
+            
 
             try {
-                $this->article->createArticle($data, $tags);
-                var_dump("check");
-                return true;
+                $this->article->createArticle($title, $content, $filePath, $categoryId, $scheduledDate, $author, $tags);
+                header("Location: ../views/articles.php");
             } catch (Exception $e) {
                 error_log("error inserting the article: " . $e->getMessage());
                 return false;

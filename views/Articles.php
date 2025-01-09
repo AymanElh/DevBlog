@@ -103,20 +103,22 @@ $articleHandler->addArticle();
                                     $count = 1;
                                     foreach ($articles as $article) :
                                         $tags = $articleHandler->getArticleTags($article['id']);
-                                        $category_name = $category->getCategoryName($article['category_id']);
+
                                     ?>
-                                        <td><?= $count++ ?></td>
-                                        <td><?= htmlspecialchars($article['title']) ?></td>
-                                        <td><?= htmlspecialchars($category_name) ?></td>
-                                        <td><?= implode(' ', $tags) ?></td>
-                                        <td><?= htmlspecialchars($article['author_id']) ?></td>
-                                        <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
-                                        <td><?= htmlspecialchars($article['status']) ?></td>
-                                        <td><?= htmlspecialchars($article['views']) ?></td>
-                                        <td>
-                                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id']; ?>">Edit</button>
-                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteArticleModal<?= $article['id']; ?>">Delete</button>
-                                        </td>
+                                        <tr>
+                                            <td><?= $count++ ?></td>
+                                            <td><?= htmlspecialchars($article['title']) ?></td>
+                                            <td>Science</td>
+                                            <td><?= implode(' ', $tags) ?></td>
+                                            <td><?= htmlspecialchars($article['author_id']) ?></td>
+                                            <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
+                                            <td><?= htmlspecialchars($article['status']) ?></td>
+                                            <td><?= htmlspecialchars($article['views']) ?></td>
+                                            <td>
+                                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id']; ?>">Edit</button>
+                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteArticleModal<?= $article['id']; ?>">Delete</button>
+                                            </td>
+                                        </tr>
                                         <div class="modal fade" id="editArticleModal<?= $article['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="editArticleModalLabel<?= $article['id'] ?>" aria-hidden="true">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content">
@@ -198,13 +200,11 @@ $articleHandler->addArticle();
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php endforeach; ?>
-
-
-                                </tbody>
-                            </table>
                         </div>
                     </div>
+                <?php endforeach; ?>
+                </tbody>
+                </table>
 
                 </div>
                 <!-- /.container-fluid -->

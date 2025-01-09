@@ -47,7 +47,7 @@
     </li>
 
     <!-- Nav Item - Categories -->
-    <?php if ($_SESSION['role'] === 'admin'): ?>
+    <?php if ($_SESSION['user']['role'] === 'admin'): ?>
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategories"
                 aria-expanded="true" aria-controls="collapseCategories">
@@ -91,7 +91,7 @@
     <!-- Nav Item - Authors -->
      
     <?php
-    if ($_SESSION['role'] === 'admin') : ?>
+    if ($_SESSION['user']['role'] === 'admin') : ?>
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAuthors"
                 aria-expanded="true" aria-controls="collapseAuthors">

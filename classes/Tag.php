@@ -13,12 +13,13 @@ use Classes\BaseModel;
 class Tag
 {
     private static BaseModel $dbHandler;
-    private static $table = 'tags';
+    private static $table;
     private static $nbrOfTags = 0;
 
     function __construct(BaseModel $dbHandler)
     {
         self::$dbHandler = $dbHandler;
+        self::$table = 'tags';
     }
 
     public static function createTag(string $name) : void
@@ -50,5 +51,11 @@ class Tag
         $where = "id = $tag_id";
         $result = self::$dbHandler->selectRecords(self::$table, 'name', $where);
         return $result[0]['name'];
+    }
+
+    public static function getCountTags() : int 
+    {
+        $result = self::$dbHandler->selectRecords(self::$table, 'COUNT(*) AS TotalTags');
+        return $result ? $result[0]['TotalTags'] : 0;
     }
 }

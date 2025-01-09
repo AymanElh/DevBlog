@@ -12,22 +12,26 @@ use Classes\Author;
 use Auth\Auth;
 // require_once __DIR__ . '/../classes/BaseModel.php';
 
-// $conn = Database::connect();
+$conn = Database::connect();
 
-// $dbHandler = new BaseModel($conn);
-
-// if ($conn === null) {
-//     die('Database connection failed.');
-// }
-
-// $category = new Category($dbHandler);
-// // $category->createCategory('scinece');
-
-// // $mysql = (new Tag($dbHandler))-> createTag('MySQL');
+$dbHandler = new BaseModel($conn);
 
 
-// $article = new Article($dbHandler);
-// $article->createArticle('How to Create a Slug from an Article Title!', 'some content', '/uploads/image.png', 'Dev', 'scheduled', '2025-01-05', 1, ['php']);
+// $data = [
+//     'title' => "Computer Science",
+//     'content' => "some content",
+//     'slug' => 'computer-science',
+//     'featured_image' => "/uploads/image.png",
+//     'excepert' => 'dfksjlfds',
+//     'status' => 'draft',
+//     'shedule_date' => '2025-2-1',
+//     'views' => 20,
+//     'cateogry_id' => 2,
+//     'author_id' => 1
+// ];
+
+$article = new Article($dbHandler);
+$article->createArticle('computer science', 'some content', '20240232', 2,  1, 'cs-it', '/uploads/img', ['8']);
 
 // $article->updateArticle(
 //     3, 

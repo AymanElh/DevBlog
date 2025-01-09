@@ -13,7 +13,7 @@ $email = $password = "";
 $message = "";
 
 session_start();
-if(isset($_SESSION['user_id'])) {
+if(isset($_SESSION['user'])) {
     // echo "<pre>";
     // var_dump($_SESSION);
     // echo "</pre>";

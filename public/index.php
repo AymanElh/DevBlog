@@ -1,69 +1,18 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Classes\Category;
 use Config\Database;
 use Classes\BaseModel;
 use Classes\Article;
-use Classes\Tag;
-use Classes\User;
-use Classes\Admin;
-use Classes\Author;
-use Auth\Auth;
-// require_once __DIR__ . '/../classes/BaseModel.php';
 
+// Database connection
 $conn = Database::connect();
-
 $dbHandler = new BaseModel($conn);
 
-
-// $data = [
-//     'title' => "Computer Science",
-//     'content' => "some content",
-//     'slug' => 'computer-science',
-//     'featured_image' => "/uploads/image.png",
-//     'excepert' => 'dfksjlfds',
-//     'status' => 'draft',
-//     'shedule_date' => '2025-2-1',
-//     'views' => 20,
-//     'cateogry_id' => 2,
-//     'author_id' => 1
-// ];
-
-// $article = new Article($dbHandler);
-// $article->createArticle('computer science', 'some content', '20240232', 2,  1, 'cs-it', '/uploads/img', ['8']);
-
-// $article->updateArticle(
-//     3, 
-//     title: 'Updated Article Title', 
-//     content: 'Updated content for the article.',
-//     picture: 'updateimg.png',
-//     category: 'Dev',
-//     status: 'published',
-//     scheduleDate: '2025-01-15',
-//     tags: ['PHP', 'MySQL']
-// );
-
-// $article->deleteArticle(4);
-
-
-// $user = new User($dbHandler);
-
-// $userData = [
-//     'John Doe',
-//     'john_doe',
-//     'john@example.com',
-//     password_hash('password123', PASSWORD_BCRYPT), 
-// ];
-
-// $userId = $user->createUser(...$userData);
-
-// echo $userId;
-
-// $auth = new Auth($basemodel);
-
-// $result = $auth->signup("yassine", "username", "yassin@gmail.com", "123456");
-// print_r($result);
+// Fetch published articles
+$articleModel = new Article($dbHandler);
+$articles = $articleModel->getPublishedArticles();
+// var_dump($articles);
 
 ?>
 
@@ -73,7 +22,7 @@ $dbHandler = new BaseModel($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevBlog Navbar</title>
+    <title>DevBlog - Home</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -105,6 +54,44 @@ $dbHandler = new BaseModel($conn);
             </div>
         </div>
     </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h1 class="text-center font-weight-bold">Welcome to DevBlog</h1>
+        <p class="text-center text-muted">Your go-to platform for the latest in development and tech.</p>
+
+        <!-- Articles Section -->
+        <div class="row">
+            <?php if (!empty($articles)): ?>
+                <?php foreach ($articles as $article): ?>
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <?=  $article['featured_image']; ?>
+                            <img src="C:\Users\Youcode\Desktop\Briefs\Brief-10 DevBlog\handlers/../public/assets/img/Blank diagram.png" class="card-img-top" alt="Article Image" style="width: 300px; height: 200px;">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= htmlspecialchars($article['title']) ?></h5>
+                                <p class="card-text text-muted">
+                                    <?= htmlspecialchars(substr($article['excerpt'], 0, 100)) ?>...
+                                </p>
+                                <a href="article.php?slug=<?= htmlspecialchars($article['slug']) ?>" class="btn btn-primary btn-sm">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12">
+                    <p class="text-center text-muted">No articles available at the moment. Check back later!</p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="text-muted mb-0">&copy; <?= date('Y') ?> DevBlog. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

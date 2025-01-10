@@ -75,17 +75,17 @@ class Article
 
     public function createArticle($title, $content, $filePath, $categoryId, $scheduledDate, $author, $tags)
     {
-        
+
         $data = [
-                'title' => $title,
-                'content' => $content,
-                'featured_image' => $filePath,
-                'category_id' => $categoryId,
-                // 'status' => $status,
-                'scheduled_date' => $scheduledDate,
-                'author_id' => $author,
-                'slug' => $this->getSlug($title)
-            ];
+            'title' => $title,
+            'content' => $content,
+            'featured_image' => $filePath,
+            'category_id' => $categoryId,
+            // 'status' => $status,
+            'scheduled_date' => $scheduledDate,
+            'author_id' => $author,
+            'slug' => $this->getSlug($title)
+        ];
 
         $id = $this->basemodel->insertRecord($this->table, $data);
 
@@ -106,18 +106,18 @@ class Article
     {
 
         $data = [
-                'title' => $title,
-                'content' => $content,
-                'featured_image' => $filePath,
-                'category_id' => $categoryId,
-                'scheduled_date' => $scheduledDate,
-                'author_id' => $author,
-                'slug' => $this->getSlug($title),
-            ];
-            
+            'title' => $title,
+            'content' => $content,
+            'featured_image' => $filePath,
+            'category_id' => $categoryId,
+            'scheduled_date' => $scheduledDate,
+            'author_id' => $author,
+            'slug' => $this->getSlug($title),
+        ];
+
         $result = $this->basemodel->updateRecord($this->table, $data, $id);
 
-        if(!$result) {
+        if (!$result) {
             throw new Exception("Error updating Article");
         }
 
@@ -154,36 +154,36 @@ class Article
         return $result ? $result[0] : [];
     }
 
-    public function getAllArticles() : array
+    public function getAllArticles(): array
     {
         $result = $this->basemodel->selectRecords($this->table);
-        if(!$result) {
+        if (!$result) {
             return [];
         }
 
         return $result;
     }
 
-    public function getArticleTags(int $article_id) : array
+    public function getArticleTags(int $article_id): array
     {
         $where = "article_id = $article_id";
         $result = $this->basemodel->selectRecords('article_tags', 'tag_id', $where);
-        if(!$result) {
+        if (!$result) {
             return [];
         }
         return $result;
     }
 
-    public function getCountArticles() : int
+    public function getCountArticles(): int
     {
         $result = $this->basemodel->selectRecords($this->table, 'COUNT(*) AS TotalArticles');
         return $result ? $result[0]['TotalArticles'] : 0;
     }
 
 
-    public static function topAuthors() : ? array
+    public static function topAuthors(): ?array
     {
-        $query = "SELECT users.full_name, COUNT(articles.id) AS totalArticles FROM articles
+        $query = "SELECT full_name, COUNT(articles.id) AS totalArticles, profile_picture_url FROM articles
                     JOIN users ON users.id = articles.author_id
                     WHERE users.role LIKE 'author'
                     GROUP BY author_id
@@ -191,13 +191,62 @@ class Article
 
         $stmt = (Database::connect())->prepare($query);
 
-        if($stmt->execute()) {
+        if ($stmt->execute()) {
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
             return null;
         }
 
         return $result ?: [];
-        
+    }
+
+    public static function mostReadArticles(): ?array
+    {
+        $query = "SELECT title, created_at, featured_image, views FROM articles ORDER BY views DESC LIMIT 10";
+        $stmt = (Database::connect())->prepare($query);
+
+        if ($stmt->execute()) {
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return null;
+        }
+        return $result ?: [];
+    }
+
+    public function getRecentArticles()
+    {
+        $query = "
+        SELECT 
+            articles.id AS id, 
+            articles.title AS title, 
+            articles.featured_image AS featured_image, 
+            articles.created_at AS created_at, 
+            articles.views, 
+            authors.full_name AS author_name, 
+            categories.name AS category_name,
+            GROUP_CONCAT(tags.name SEPARATOR ',') AS tags
+        FROM articles
+        LEFT JOIN users AS authors ON articles.author_id = authors.id
+        LEFT JOIN categories ON articles.category_id = categories.id
+        LEFT JOIN article_tags ON articles.id = article_tags.article_id
+        LEFT JOIN tags ON article_tags.tag_id = tags.id
+        GROUP BY articles.id
+        ORDER BY articles.created_at DESC
+        LIMIT 5
+    ";
+
+        $stmt = (Database::connect())->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getPublishedArticles()
+    {
+        $query = "SELECT * FROM articles WHERE status = 'published' ORDER BY scheduled_date DESC";
+        $stmt = (Database::connect())->prepare($query);
+        if($stmt->execute()) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return [];
     }
 }

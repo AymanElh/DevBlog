@@ -9,7 +9,7 @@ use Classes\User;
 use Classes\Tag;
 use Classes\Category;
 use Auth\Auth;
-
+use Handlers\ArticleHandler;
 
 // Prepare data for the chart
 $categories = [];
@@ -28,6 +28,7 @@ $colors = [
 
 $baseModel = new BaseModel(Database::connect());
 $article = new Article($baseModel);
+$articleHandler = new ArticleHandler($article);
 $category = new Category($baseModel);
 
 $auth = new Auth($baseModel);
@@ -37,10 +38,19 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     exit();
 }
 
-$topAuthors = Article::topAuthors();
+$top_articles = $article::mostReadArticles();
+$articles = $article->getRecentArticles();
 // var_dump($topAuthors);
 // var_dump($_SESSION['user']['role']);
 // User::checkRole('admin');
+
+$categoryStats = $category->getCategoryStats();
+
+foreach ($category_stats as $stat) {
+    $categories[] = $stat['category_name'];
+    $counts[] = $stat['article_count'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -192,7 +202,10 @@ $topAuthors = Article::topAuthors();
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <?php foreach ($topAuthors as $index => $user): ?>
+                                    <?php
+                                    // $topAuthors = Article->topAuthors();
+
+                                    foreach ($topAuthors as $index => $user): ?>
                                         <div class="d-flex align-items-center mb-3">
                                             <div class="mr-3">
                                                 <div class="icon-circle bg-primary text-white">
@@ -222,9 +235,9 @@ $topAuthors = Article::topAuthors();
                                                 </a>
                                             </div>
                                         </div>
-                                        <?php if ($index < count($top_users) - 1): ?>
+                                        <!-- <?php if ($index < count($top_users) - 1): ?>
                                             <hr>
-                                        <?php endif; ?>
+                                        <?php endif; ?> -->
                                     <?php endforeach; ?>
                                 </div>
                             </div>
@@ -306,11 +319,11 @@ $topAuthors = Article::topAuthors();
                                         <canvas id="categoryPieChart"></canvas>
                                     </div>
                                     <div class="mt-4 text-center small">
-                                        <?php foreach ($category_stats as $index => $stat): ?>
+                                        <?php foreach ($categoryStats as $index => $stat):  ?>
                                             <span class="mr-2">
                                                 <i class="fas fa-circle" style="color: <?= $colors[$index % count($colors)] ?>"></i>
-                                                <?= htmlspecialchars($stat['category_name']) ?>
-                                                (<?= $stat['article_count'] ?>)
+                                                <?= htmlspecialchars($stat['name']) ?>
+                                                (<?= $stat['totalArticles'] ?>)
                                             </span>
                                         <?php endforeach; ?>
                                     </div>
@@ -318,6 +331,7 @@ $topAuthors = Article::topAuthors();
                             </div>
                         </div>
                     </div>
+
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
@@ -334,22 +348,12 @@ $topAuthors = Article::topAuthors();
                                             <th>Tags</th>
                                             <th>Views</th>
                                             <th>Created At</th>
-                                            <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <!-- <tfoot>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Author</th>
-                                            <th>Category</th>
-                                            <th>Tags</th>
-                                            <th>Views</th>
-                                            <th>Created At</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </tfoot> -->
                                     <tbody>
-                                        <?php foreach ($articles as $article): ?>
+                                        <?php
+                                        foreach ($articles as $article):
+                                        ?>
                                             <tr>
                                                 <td>
                                                     <img src="<?= htmlspecialchars($article['featured_image']) ?>"
@@ -439,24 +443,27 @@ $topAuthors = Article::topAuthors();
             </div>
         </div>
     </div>
+    <!-- Page level plugins -->
+    <script src="../public/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../public/vendor/jquery/jquery.min.js"></script>
+    <script src="../public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="../public/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script src="../public/assets/js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
-    
+    <script src="../public/assets/js/demo/chart-area-demo.js"></script>
+    <script src="../public/assets/js/demo/chart-pie-demo.js"></script>
+
+
+
     <!-- Initialize the pie chart -->
     <script>
         // Set new default font family and font color to mimic Bootstrap's default styling
@@ -507,24 +514,6 @@ $topAuthors = Article::topAuthors();
         });
     </script>
 
-
-    <!-- Page level plugins -->
-    <script src="../public/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="../public/vendor/jquery/jquery.min.js"></script>
-    <script src="../public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="../public/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="../public/assets/js/sb-admin-2.min.js"></script>
-
-
-    <!-- Page level custom scripts -->
-    <script src="../public/assets/js/demo/datatables-demo.js"></script>
 </body>
 
 </html>

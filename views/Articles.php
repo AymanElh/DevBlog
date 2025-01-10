@@ -119,7 +119,11 @@ $articleHandler->updateArticle();
                                             <td><?= $count++ ?></td>
                                             <td><?= htmlspecialchars($article['title']) ?></td>
                                             <td>Science</td>
-                                            <td><?= implode(' ', $tags) ?></td>
+                                            <td>
+                                                <?php foreach($tags as $tag): ?>
+                                                    <span class="badge badge-primary mr-1"> . <?= htmlspecialchars($tag) ?> . </span>
+                                                <?php endforeach; ?>
+                                            </td>
                                             <td><?= User::getAuthorName($article['author_id']) ?></td>
                                             <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
                                             <td><?= htmlspecialchars($article['status']) ?></td>

@@ -116,7 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 </form>
                                             </td>
 
-                                            </td>
                                             <td>
                                                 <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editUserModal<?= $user['id']; ?>">Edit</button>
                                                 <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal<?= $user['id']; ?>">Delete</button>

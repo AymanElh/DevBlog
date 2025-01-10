@@ -7,7 +7,9 @@ namespace Classes;
 require_once __DIR__ . '/../config/error_config.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Config\Database;
 use Classes\BaseModel;
+use PDO;
 
 
 class Category 
@@ -71,5 +73,17 @@ class Category
     {
         $result = $this->dbHandler->selectRecords($this->table, 'COUNT(*) AS TotalCategories');
         return $result ? $result[0]['TotalCategories'] : 0;
+    }
+
+    public function getCategoryStats() : array
+    {
+        $query = "SELECT categories.name , COUNT(articles.id) AS totalArticles FROM categories LEFT JOIN articles ON articles.category_id = categories.id GROUP BY categories.id ORDER BY totalArticles DESC";
+        $stmt = (Database::connect())->prepare($query);
+        
+        if($stmt->execute()) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return [];
+
     }
 }

@@ -34,10 +34,13 @@ $tagHandler = new TagHandler(new Tag($baseModel));
 $allTags = Tag::getAllTags();
 
 
-$articleHandler = new ArticleHandler(new Article($baseModel));
-$articleHandler->addArticle();
-$articleHandler->deleteArticle();
-$articleHandler->updateArticle();
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $articleHandler = new ArticleHandler(new Article($baseModel));
+    $articleHandler->addArticle();
+    $articleHandler->deleteArticle();
+    $articleHandler->updateArticle();
+    $articleHandler->acceptArticle();
+}
 
 $userid = $_SESSION['user']['id'];
 if ($_SESSION['user']['role'] === 'admin') {
@@ -133,7 +136,16 @@ if ($_SESSION['user']['role'] === 'admin') {
                                                 <td><?= implode(' ', $tags) ?></td>
                                                 <td><?= User::getAuthorName($article['author_id']) ?></td>
                                                 <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
-                                                <td><?= htmlspecialchars($article['status']) ?></td>
+                                                <td>
+                                                    <?php if($article['status'] === 'draft' && $_SESSION['user']['role'] === 'admin') :  ?>
+                                                        <form action="" method="POST">
+                                                            <input type="hidden" name="article_id" value="<?= $article['id'] ?>">
+                                                            <button type="submit" class="btn btn-success btn-sm" name="accept-article">Accept Article</button>
+                                                        </form>
+                                                    <?php else:  ?>
+                                                          <span class="badge badge-success p-2"><?= htmlspecialchars($article['status']) ?></span>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td><?= htmlspecialchars($article['views']) ?></td>
                                                 <td>
                                                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id']; ?>">Edit</button>

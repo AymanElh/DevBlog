@@ -169,4 +169,16 @@ class ArticleHandler
 
         return $tags;
     }
+
+    public function acceptArticle() : void
+    {
+        if(isset($_POST['accept-article']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $articleId = $_POST['article_id'];
+            if($this->article->changeArticleStatus($articleId)) {
+                header("Location: articles.php");
+            } else {
+                die("Error acceptint the article");
+            }
+        }
+    }
 }

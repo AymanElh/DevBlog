@@ -250,4 +250,16 @@ class Article
         }
         return [];
     }
+
+    public function changeArticleStatus(int $articleId) : bool
+    {
+        try {
+            $this->basemodel->updateRecord($this->table, ['status' => 'published'], $articleId);
+            return true;
+        } catch(Exception $e) {
+            error_log("Error changing the status of article: " .  $e->getMessage());
+            return false;
+        }
+        
+    }
 }

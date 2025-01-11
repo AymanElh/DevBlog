@@ -1,5 +1,4 @@
 <?php
-// Include necessary files and initialize authentication
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Config\Database;
@@ -13,7 +12,7 @@ $email = $password = "";
 $message = "";
 
 session_start();
-if(isset($_SESSION['user'])) {
+if (isset($_SESSION['user'])) {
     // echo "<pre>";
     // var_dump($_SESSION);
     // echo "</pre>";
@@ -29,13 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $message = $auth->login($email, $password);
 
-    if($message === "Login added successfully") {
+    if ($message === "Login added successfully") {
         header("Location: dashboard.php");
         exit;
     } else {
         $message = "Invalid email or password";
     }
-    
 }
 ?>
 
@@ -43,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -59,22 +56,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Custom styles for this template-->
     <link href="../public/assets/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .btn-user {
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .btn-google {
+            background-color: #dd4b39;
+            color: white;
+        }
+
+        .btn-facebook {
+            background-color: #3b5998;
+            color: white;
+        }
+
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
-<body class="bg-gradient-primary">
+<body>
 
     <div class="container">
 
         <!-- Outer Row -->
         <div class="row justify-content-center">
 
-            <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="col-xl-6 col-lg-8 col-md-10">
 
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="p-5">
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>

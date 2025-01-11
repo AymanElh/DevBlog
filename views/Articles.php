@@ -30,6 +30,7 @@ $categoryHandler = new CategoryHandler($category);
 $categories = $categoryHandler->getAllCategories();
 
 $article = new Article($baseModel);
+$articleHandler = new ArticleHandler($article);
 $tagHandler = new TagHandler(new Tag($baseModel));
 $allTags = Tag::getAllTags();
 

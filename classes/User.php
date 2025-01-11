@@ -56,9 +56,9 @@ class User
 
     public static function getUser(string $email): array
     {
-        $where = "email = '$email'";
-        $email = self::$basemodel->selectRecords(self::$table, '*', $where);
-        return $email ?: [];
+        $where = "email = ?";
+        $user = self::$basemodel->selectRecords(self::$table, '*', $where, [$email]);
+        return $user ?: [];
     }
 
     public static function getAllUsers() : array

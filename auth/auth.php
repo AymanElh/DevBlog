@@ -96,4 +96,21 @@ class Auth
         session_unset();
         session_destroy();
     }
+
+    public static function checkAccess(array $roles = []) 
+    {
+        if(session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if(empty($_SESSION['user'])) {
+            header("Location: ../public/index.php");
+            exit;
+        }
+
+        if(!empty($roles) && !in_array($_SESSION['user']['role'], $roles)) {
+            header("Location: ../views/404.php");
+            exit;
+        }
+    }
 }

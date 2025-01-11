@@ -51,6 +51,9 @@ $articles = $article->getRecentArticles();
 //     $counts[] = $stat['totalArticles'];
 // }
 
+
+Auth::checkAccess(['admin', 'author']);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -262,4 +262,18 @@ class Article
         }
         
     }
+
+    public function searchArticles(string $keyword)
+    {
+        $query = "SELECT * FROM articles WHERE title LIKE '%$keyword%'";
+        try {
+            $stmt = (Database::connect())->prepare($query);
+            if($stmt->execute()) {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            } 
+        }
+        catch(Exception $e) {
+            error_log("Error excuting the query: " . $e->getMessage());
+        }
+    }
 }

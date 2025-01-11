@@ -35,7 +35,7 @@ $tagHandler = new TagHandler(new Tag($baseModel));
 $allTags = Tag::getAllTags();
 
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $articleHandler = new ArticleHandler(new Article($baseModel));
     $articleHandler->addArticle();
     $articleHandler->deleteArticle();
@@ -134,23 +134,41 @@ if ($_SESSION['user']['role'] === 'admin') {
                                                 <td><?= $count++ ?></td>
                                                 <td><?= htmlspecialchars($article['title']) ?></td>
                                                 <td>Science</td>
-                                                <td><?= implode(' ', $tags) ?></td>
+                                                <td>
+                                                    <?php foreach($tags as $tag) : ?>
+                                                        <span class="badge badge-primary mr-1"><?= $tag ?></span>
+                                                    <?php endforeach; ?>
+                                                </td>
                                                 <td><?= User::getAuthorName($article['author_id']) ?></td>
                                                 <td><?= htmlspecialchars($article['scheduled_date']) ?></td>
                                                 <td>
-                                                    <?php if($article['status'] === 'draft' && $_SESSION['user']['role'] === 'admin') :  ?>
+                                                    <?php if ($article['status'] === 'draft' && $_SESSION['user']['role'] === 'admin') :  ?>
                                                         <form action="" method="POST">
                                                             <input type="hidden" name="article_id" value="<?= $article['id'] ?>">
                                                             <button type="submit" class="btn btn-success btn-sm" name="accept-article">Accept Article</button>
                                                         </form>
                                                     <?php else:  ?>
-                                                          <span class="badge badge-success p-2"><?= htmlspecialchars($article['status']) ?></span>
+                                                        <span class="badge badge-success p-2"><?= htmlspecialchars($article['status']) ?></span>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><?= htmlspecialchars($article['views']) ?></td>
                                                 <td>
-                                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id']; ?>">Edit</button>
-                                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteArticleModal<?= $article['id']; ?>">Delete</button>
+                                                    <!-- <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id']; ?>">Edit</button>
+                                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteArticleModal<?= $article['id']; ?>">Delete</button> -->
+                                                    <div class="btn-group">
+                                                        <a href="./singlePageArticle.php?id=<?= $article['id'] ?>"
+                                                            class="btn btn-info btn-sm">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <button
+                                                            class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editArticleModal<?= $article['id'] ?>">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-sm delete-article" data-toggle="modal" data-target="#deleteArticleModal<?= $article['id'] ?>">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="editArticleModal<?= $article['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="editArticleModalLabel<?= $article['id'] ?>" aria-hidden="true">

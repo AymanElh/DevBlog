@@ -48,8 +48,8 @@ class Tag
 
     public static function getTagName(int $tag_id) : ?string
     {
-        $where = "id = $tag_id";
-        $result = self::$dbHandler->selectRecords(self::$table, 'name', $where);
+        $where = "id = ?";
+        $result = self::$dbHandler->selectRecords(self::$table, 'name', $where, [$tag_id]);
         return $result[0]['name'];
     }
 

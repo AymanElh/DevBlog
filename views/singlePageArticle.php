@@ -5,15 +5,18 @@ use Classes\BaseModel;
 use Classes\Article;
 use Classes\User;
 
-$user = new User(new BaseModel(Database::connect()));
+$db = new BaseModel(Database::connect());
 
-$articleId = $_GET['id'];
+$user = new User($db);
 
-$article = (new Article(new BaseModel(Database::connect())))->getArticleById($articleId);
-
-
-if(!$article) {
+if(isset($_GET['id'])) {
+    $articleId = (int)$_GET['id'];
+    $articleclass = new Article($db);  
+    $article = $articleclass->getArticleById($articleId);
+    $articleclass->incrementViews($articleId);
+} else {
     header("Location: 404.php");
+    exit;
 }
 
 ?>

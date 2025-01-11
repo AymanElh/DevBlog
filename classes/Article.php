@@ -150,8 +150,8 @@ class Article
 
     public function getArticleById(int $article_id): array
     {
-        $where = "id = $article_id";
-        $result =  $this->basemodel->selectRecords($this->table, '*', $where);
+        $where = "id = ?";
+        $result =  $this->basemodel->selectRecords($this->table, '*', $where, [$article_id]);
         return $result ? $result[0] : [];
     }
 
@@ -179,6 +179,12 @@ class Article
     {
         $result = $this->basemodel->selectRecords($this->table, 'COUNT(*) AS TotalArticles');
         return $result ? $result[0]['TotalArticles'] : 0;
+    }
+
+    public function getCoutArticlesByAuthor(int $author_id) : int 
+    {
+        $result = $this->basemodel->selectRecords($this->table, 'COUNT(*) AS authorArticles', "author_id = $author_id");
+        return $result ? $result[0]['authorArticles'] : 0;
     }
 
 
@@ -241,6 +247,34 @@ class Article
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getRecentArticlesByAuthor(int $author_id)
+    {
+        $query = "
+        SELECT 
+            articles.id AS id, 
+            articles.title AS title, 
+            articles.featured_image AS featured_image, 
+            articles.created_at AS created_at, 
+            articles.views, 
+            authors.full_name AS author_name, 
+            categories.name AS category_name,
+            GROUP_CONCAT(tags.name SEPARATOR ',') AS tags
+        FROM articles
+        LEFT JOIN users AS authors ON articles.author_id = authors.id
+        LEFT JOIN categories ON articles.category_id = categories.id
+        LEFT JOIN article_tags ON articles.id = article_tags.article_id
+        LEFT JOIN tags ON article_tags.tag_id = tags.id
+        WHERE articles.author_id = ?
+        GROUP BY articles.id
+        ORDER BY articles.created_at DESC
+        LIMIT 5
+    ";
+
+        $stmt = (Database::connect())->prepare($query);
+        $stmt->execute([$author_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getPublishedArticles()
     {
         $query = "SELECT * FROM articles WHERE status = 'published' ORDER BY scheduled_date DESC";
@@ -275,5 +309,19 @@ class Article
         catch(Exception $e) {
             error_log("Error excuting the query: " . $e->getMessage());
         }
+    }
+
+    public function incrementViews(int $article_id) : void
+    {
+        $stmt = (Database::connect())->prepare("UPDATE articles SET views = views+1 WHERE id = ?");
+        $stmt->execute([$article_id]);
+    }
+
+    public static function getTotalViewsByAuthor(int $author_id) : int
+    {
+        $stmt = (Database::connect())->prepare("SELECT SUM(views) AS totalViews FROM articles WHERE author_id = ?");
+        $stmt->execute([$author_id]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result ? (int)$result[0]['totalViews'] : 0;
     }
 }

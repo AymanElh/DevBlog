@@ -2,7 +2,7 @@
 
 .env
 
-vendor/
+/vendor/
 
 logs/
 

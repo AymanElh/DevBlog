@@ -7,6 +7,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Config\Database;
 use Classes\BaseModel;
 use Classes\User;
+use Auth\Auth;
 
 
 class UserHandler
@@ -20,17 +21,15 @@ class UserHandler
         $this->user = new User($this->basemodel);
     }
 
-    public function changeUserRole() : void
+    public function changeUserRole(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user-role'])) {
             $userId = (int)$_POST['user_id'];
             $newRole = $_POST['user-role'];
             var_dump($newRole);
             $this->basemodel->updateRecord('users', ['role' => $newRole], $userId);
-        
-        }        
+        }
         header("Location: ../views/users.php");
-
     }
 
     public function updateUser(): void
@@ -50,7 +49,6 @@ class UserHandler
                 echo "Failed to update user.";
             }
             header("Location: ../views/users.php");
-
         }
     }
 
@@ -68,6 +66,14 @@ class UserHandler
             }
         }
         header("Location: ../views/users.php");
+    }
 
+    public static function logout(): void
+    {
+        if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+            Auth::logout();
+            header("Location: ../public/index.php");
+            exit();
+        }
     }
 }

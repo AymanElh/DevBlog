@@ -143,8 +143,9 @@ class Article
 
     public function getArticlesByAuthor(int $author_id): array
     {
-        $where = "author_id = $author_id";
-        return $this->basemodel->selectRecords($this->table, '*', $where);
+        $where = "author_id = ?";
+        $result = $this->basemodel->selectRecords($this->table, '*', $where, [$author_id]);
+        return $result ?: [];
     }
 
     public function getArticleById(int $article_id): array

@@ -48,12 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Custom styles for this template-->
     <link href="../public/assets/css/sb-admin-2.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 </head>
 
@@ -232,7 +227,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
+    <!-- Bootstrap core JavaScript-->
+    <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="../public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- Page level plugins -->
+    <script src="../public/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../public/vendor/jquery/jquery.min.js"></script>
+
+
+    <!-- Core plugin JavaScript-->
+    <script src="../public/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
     <script src="../public/assets/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="../public/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../public/assets/js/js/demo/datatables-demo.js"></script>
+
 </body>
 
 </html>

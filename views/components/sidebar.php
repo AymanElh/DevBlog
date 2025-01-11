@@ -1,12 +1,14 @@
+<?php session_start(); ?>
+
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../dashboard.php">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../views/dashboard.php">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-blog"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">DevBlog Admin</div>
+        <div class="sidebar-brand-text mx-3">DevBlog <?php echo $_SESSION['user']['role'] ?></div>
     </a>
 
     <!-- Divider -->
@@ -14,8 +16,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'dasboard.php' ? 'active' : '' ?>">
-        <a class="nav-link" href="/views/
-        ">
+        <a class="nav-link" href="../views/dashboard.php">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>

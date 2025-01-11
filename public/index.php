@@ -4,7 +4,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Config\Database;
 use Classes\BaseModel;
 use Classes\Article;
+use Handlers\UserHandler;
 
+session_start();
 // Database connection
 $conn = Database::connect();
 $dbHandler = new BaseModel($conn);
@@ -13,6 +15,10 @@ $dbHandler = new BaseModel($conn);
 $articleModel = new Article($dbHandler);
 $articles = $articleModel->getPublishedArticles();
 // var_dump($articles);
+UserHandler::logout();
+// echo "<pre>";
+// var_dump($_SESSION);
+// echo "</pre>";
 
 ?>
 
@@ -29,10 +35,10 @@ $articles = $articleModel->getPublishedArticles();
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm py-3">
         <div class="container">
             <!-- Navbar brand -->
-            <a class="navbar-brand font-weight-bold" href="#">DevBlog</a>
+            <a style="font-size: 24px;" class="navbar-brand font-weight-bold text-primary" href="#">DevBlog</a>
 
             <!-- Toggler/collapsing button -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,19 +47,35 @@ $articles = $articleModel->getPublishedArticles();
 
             <!-- Collapsible content -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <!-- Login button -->
-                    <li class="nav-item">
-                        <a href="../views/login.php" class="btn btn-outline-primary mr-2">Login</a>
-                    </li>
-                    <!-- Sign Up button -->
-                    <li class="nav-item">
-                        <a href="../views/signup.php" class="btn btn-primary">Sign Up</a>
-                    </li>
-                </ul>
+                <?php if (!empty($_SESSION['user'])) : ?>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="../views/profile.php" class="nav-link">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../views/dashboard.php" class="nav-link">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                <?php else : ?>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="../views/login.php" class="btn btn-outline-primary mr-2">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../views/signup.php" class="btn btn-primary">Sign Up</a>
+                        </li>
+                    </ul>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
+
 
     <!-- Main Content -->
     <div class="container mt-5">
@@ -66,7 +88,7 @@ $articles = $articleModel->getPublishedArticles();
                 <?php foreach ($articles as $article): ?>
                     <div class="col-md-4 mb-4">
                         <div class="card shadow-sm">
-                            <?=  $article['featured_image']; ?>
+                            <?= $article['featured_image']; ?>
                             <img src="C:\Users\Youcode\Desktop\Briefs\Brief-10 DevBlog\handlers/../public/assets/img/Blank diagram.png" class="card-img-top" alt="Article Image" style="width: 300px; height: 200px;">
                             <div class="card-body">
                                 <h5 class="card-title"><?= htmlspecialchars($article['title']) ?></h5>
@@ -83,6 +105,26 @@ $articles = $articleModel->getPublishedArticles();
                     <p class="text-center text-muted">No articles available at the moment. Check back later!</p>
                 </div>
             <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="?action=logout">Logout</a>
+                </div>
+            </div>
         </div>
     </div>
 

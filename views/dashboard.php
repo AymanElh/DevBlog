@@ -12,19 +12,19 @@ use Auth\Auth;
 use Handlers\ArticleHandler;
 
 // Prepare data for the chart
-$categories = [];
-$counts = [];
-// Define colors for the chart
-$colors = [
-    'rgb(78, 115, 223)',    // primary
-    'rgb(28, 200, 138)',    // success
-    'rgb(54, 185, 204)',    // info
-    'rgb(246, 194, 62)',    // warning
-    'rgb(231, 74, 59)',     // danger
-    'rgb(133, 135, 150)',   // secondary
-    'rgb(90, 92, 105)',     // dark
-    'rgb(244, 246, 249)'    // light
-];
+// $categories = [];
+// $counts = [];
+// // Define colors for the chart
+// $colors = [
+//     'rgb(78, 115, 223)',    // primary
+//     'rgb(28, 200, 138)',    // success
+//     'rgb(54, 185, 204)',    // info
+//     'rgb(246, 194, 62)',    // warning
+//     'rgb(231, 74, 59)',     // danger
+//     'rgb(133, 135, 150)',   // secondary
+//     'rgb(90, 92, 105)',     // dark
+//     'rgb(244, 246, 249)'    // light
+// ];
 
 $baseModel = new BaseModel(Database::connect());
 $article = new Article($baseModel);
@@ -44,12 +44,12 @@ $articles = $article->getRecentArticles();
 // var_dump($_SESSION['user']['role']);
 // User::checkRole('admin');
 
-$categoryStats = $category->getCategoryStats();
+// $categoryStats = $category->getCategoryStats();
 
-foreach ($category_stats as $stat) {
-    $categories[] = $stat['category_name'];
-    $counts[] = $stat['article_count'];
-}
+// foreach ($categoryStats as $stat) {
+//     $categories[] = $stat['name'];
+//     $counts[] = $stat['totalArticles'];
+// }
 
 ?>
 <!DOCTYPE html>
@@ -65,18 +65,17 @@ foreach ($category_stats as $stat) {
 
     <title>DevBlog - Dashboard</title>
 
-    <!-- Custom fonts for this template-->
     <link href="../public/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <!-- Custom styles for this template-->
     <link href="../public/assets/css/sb-admin-2.css" rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+
 </head>
 
 <body id="page-top">
@@ -84,7 +83,7 @@ foreach ($category_stats as $stat) {
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <?php include './components/sidebar.php'; ?>
+        <?php require './components/sidebar.php'; ?>
 
 
         <!-- Content Wrapper -->
@@ -316,7 +315,7 @@ foreach ($category_stats as $stat) {
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="categoryPieChart"></canvas>
+                                        <!-- <canvas id="categoryPieChart"></canvas> -->
                                     </div>
                                     <div class="mt-4 text-center small">
                                         <?php foreach ($categoryStats as $index => $stat):  ?>
@@ -443,13 +442,17 @@ foreach ($category_stats as $stat) {
             </div>
         </div>
     </div>
-    <!-- Page level plugins -->
-    <script src="../public/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
 
     <!-- Bootstrap core JavaScript-->
-    <script src="../public/vendor/jquery/jquery.min.js"></script>
+    <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="../public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- Page level plugins -->
+    <script src="../public/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../public/vendor/jquery/jquery.min.js"></script>
+
 
     <!-- Core plugin JavaScript-->
     <script src="../public/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -457,62 +460,17 @@ foreach ($category_stats as $stat) {
     <!-- Custom scripts for all pages-->
     <script src="../public/assets/js/sb-admin-2.min.js"></script>
 
+    <!-- Page level plugins -->
+    <script src="../public/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="../public/assets/js/demo/chart-area-demo.js"></script>
-    <script src="../public/assets/js/demo/chart-pie-demo.js"></script>
+    <script src="../public/assets/js/js/demo/datatables-demo.js"></script>
 
 
 
-    <!-- Initialize the pie chart -->
-    <script>
-        // Set new default font family and font color to mimic Bootstrap's default styling
-        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-        Chart.defaults.global.defaultFontColor = '#858796';
 
-        // Pie Chart
-        var ctx = document.getElementById("categoryPieChart");
-        var categoryPieChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: <?= json_encode($categories) ?>,
-                datasets: [{
-                    data: <?= json_encode($counts) ?>,
-                    backgroundColor: <?= json_encode(array_slice($colors, 0, count($categories))) ?>,
-                    hoverBackgroundColor: <?= json_encode(array_slice($colors, 0, count($categories))) ?>,
-                    hoverBorderColor: "rgba(234, 236, 244, 1)",
-                }],
-            },
-            options: {
-                maintainAspectRatio: false,
-                tooltips: {
-                    backgroundColor: "rgb(255,255,255)",
-                    bodyFontColor: "#858796",
-                    borderColor: '#dddfeb',
-                    borderWidth: 1,
-                    xPadding: 15,
-                    yPadding: 15,
-                    displayColors: false,
-                    caretPadding: 10,
-                    callbacks: {
-                        label: function(tooltipItem, data) {
-                            var dataset = data.datasets[tooltipItem.datasetIndex];
-                            var total = dataset.data.reduce(function(previousValue, currentValue) {
-                                return previousValue + currentValue;
-                            });
-                            var currentValue = dataset.data[tooltipItem.index];
-                            var percentage = Math.floor(((currentValue / total) * 100) + 0.5);
-                            return data.labels[tooltipItem.index] + ': ' + currentValue + ' (' + percentage + '%)';
-                        }
-                    }
-                },
-                legend: {
-                    display: false
-                },
-                cutoutPercentage: 80,
-            },
-        });
-    </script>
+
 
 </body>
 

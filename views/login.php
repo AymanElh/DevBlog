@@ -17,7 +17,7 @@ if (isset($_SESSION['user'])) {
     // var_dump($_SESSION);
     // echo "</pre>";
     // die();
-    header("Location: dashboard.php");
+    header("Location: ../public/index.php");
     exit;
 }
 

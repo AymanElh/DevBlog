@@ -34,7 +34,7 @@ $category = new Category($baseModel);
 $auth = new Auth($baseModel);
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     $auth->logout();
-    header("Location: login.php");
+    header("Location: ../public/index.php");
     exit();
 }
 

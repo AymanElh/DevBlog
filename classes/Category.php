@@ -58,10 +58,10 @@ class Category
     {
         $where = "id = $category_id";
         $result = $this->dbHandler->selectRecords($this->table, 'name', $where);
-        echo "<pre>";
+        // echo "<pre>";
 
-        var_dump($result[0]['name']);
-        echo "</pre>";
+        // var_dump($result[0]['name']);
+        // echo "</pre>";
 
         if($result) { 
             return $result[0]['name'];

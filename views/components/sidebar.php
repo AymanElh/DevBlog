@@ -144,7 +144,7 @@
 
     <!-- Nav Item - Your Profile -->
     <li class="nav-item">
-        <a class="nav-link" href="profile.php">
+        <a class="nav-link" href="../profile.php">
             <i class="fas fa-fw fa-user"></i>
             <span>Your Profile</span>
         </a>

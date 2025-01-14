@@ -1,18 +1,25 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
+
 use Config\Database;
 use Classes\BaseModel;
 use Classes\Article;
+use Classes\Category;
+use Classes\Tag;
 use Classes\User;
 
 $db = new BaseModel(Database::connect());
+$categrory = new Category($db);
+$tag = new Tag($db);
 
 $user = new User($db);
 
-if(isset($_GET['id'])) {
+if (isset($_GET['id'])) {
     $articleId = (int)$_GET['id'];
-    $articleclass = new Article($db);  
+    $articleclass = new Article($db);
     $article = $articleclass->getArticleById($articleId);
+    $tags = $articleclass->getArticleTags($articleId);
+    // var_dump($article);
     $articleclass->incrementViews($articleId);
 } else {
     header("Location: 404.php");
@@ -30,43 +37,23 @@ if(isset($_GET['id'])) {
     <title><?= $article['title'] ?> - DevBlog</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
+    <!-- Custom styles for this template -->
+    <link href="../../public/css/sb-admin-2.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .article-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .article-image {
-            width: 100px;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 8px;
-            background-color: red;
-        }
-
-        .article-title {
-            margin-top: 20px;
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
-        .article-meta {
-            color: #6c757d;
+        .article-info {
             margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #6c757d;
         }
 
-        .article-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
+        .article-info span {
+            margin-right: 15px;
+        }
+
+        .article-info span:not(:last-child)::after {
+            content: "|";
+            margin-left: 15px;
+            color: #ccc;
         }
     </style>
 </head>
@@ -82,19 +69,37 @@ if(isset($_GET['id'])) {
         </div>
     </nav>
 
-    <!-- Article Content -->
-    <div class="article-container">
-        <img src="<?= $article['featured_image'] ?>" alt="Article Image" class="article-image">
-        <h1 class="article-title"><?= $article['title'] ?></h1>
-        <div class="article-meta">
-            By <?= $user->getAuthorName($article['author_id']) ?> | <?= date('M d, Y', strtotime($article['created_at'])) ?>
-        </div>
-        <div class="article-content">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Omnis accusamus, id fugit sed unde nemo quisquam libero, natus eos tenetur itaque vero velit architecto. Praesentium aspernatur nulla excepturi voluptate similique.
-            Est ipsam architecto rem. Facere ab nobis iste unde et animi? Quod tenetur eligendi, debitis, deserunt cum quae, aperiam distinctio odit molestiae nam ea blanditiis dolor necessitatibus. Sunt, nostrum tenetur?
-            Cum commodi officiis animi, laboriosam illum sapiente est tenetur, labore, quod aperiam nostrum neque rem ullam! Perspiciatis fuga dolorum nesciunt, quam natus quasi minus facere laborum. Quidem eligendi beatae culpa.
-            Autem veniam enim aut minus illum architecto vero, eligendi nostrum omnis laboriosam reiciendis culpa quae? Commodi magni totam nobis dolor similique ipsam possimus. Facilis cupiditate cumque dolorum excepturi amet molestias?
-            Fugit voluptatum provident, itaque corporis libero in inventore error vel sint, omnis praesentium nobis distinctio necessitatibus pariatur odit! Inventore facilis blanditiis ipsam earum fuga ex maxime suscipit molestiae quibusdam laborum.
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><?= $article['title'] ?></h2>
+                        <div class="article-info">
+                            <span>Author: <?= $user->getAuthorName($article['author_id']) ?></span>
+                            <span>Category: <?= $categrory->getCategoryName($article['category_id']) ?></span>
+                            <span>Tags: </span>
+                            <?php foreach($tags as $tag) : ?>
+                                <span><?= Tag::getTagName($tag['tag_id'])  ?></span>
+                            <?php endforeach; ?>
+                            <span>Views: <?= $article['views'] ?></span>
+                            <span>Date: <?= date('F j, Y', strtotime($article['created_at'])) ?></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae similique velit magni iste, alias, dolores consectetur ab quis voluptatem adipisci dolorem rem repellat. Aliquam ullam ad nisi facere sequi rem.
+                            Totam rem mollitia atque nemo nobis commodi, itaque dignissimos cupiditate fugit ad magnam voluptate at deserunt nulla explicabo eos est beatae praesentium voluptatum exercitationem minus libero quidem fuga necessitatibus! Fugiat!
+                            Nostrum quos neque commodi nihil in delectus labore corporis excepturi sunt vitae! Natus sunt esse animi! Assumenda ullam ut neque dolores? Culpa numquam accusamus optio quisquam porro iure velit excepturi.
+                            Nulla harum ad autem sunt tempora voluptate voluptates ipsum ab voluptatem, deleniti beatae deserunt quos nam accusantium aspernatur corrupti debitis accusamus. Consequatur quia repellat dignissimos excepturi quos officia dicta quis.
+                            Quo repellat cupiditate qui error ex assumenda vitae? Ad, distinctio hic! Quos sequi suscipit veritatis consequatur! Quis veniam dolorum impedit, voluptas ullam consequatur, provident consectetur laudantium dolores commodi eveniet totam!
+                            Mollitia ducimus ea sapiente saepe minus modi veniam quidem nisi cupiditate, amet totam repudiandae laudantium beatae quo accusamus similique, est alias ipsum iste magnam eius nemo. Repudiandae error tempore ducimus!
+                            Rem magnam id temporibus facere dolorem? Repellat sed, consectetur, incidunt alias quo ipsam asperiores nisi cumque eos recusandae, ipsum deserunt ratione magnam reiciendis omnis esse neque. Quibusdam commodi nesciunt fuga?
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

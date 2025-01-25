@@ -41,8 +41,6 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Article Management:</h6>
                 <a class="collapse-item" href="articles.php">View All Articles</a>
-                <a class="collapse-item" href="add-article.php">Add New Article</a>
-                <a class="collapse-item" href="article-drafts.php">Drafts</a>
             </div>
         </div>
     </li>
@@ -59,7 +57,6 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Category Management:</h6>
                     <a class="collapse-item" href="categories.php">View All Categories</a>
-                    <a class="collapse-item" href="add-category.php">Add New Category</a>
                 </div>
             </div>
         </li>
@@ -75,7 +72,6 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Tag Management:</h6>
                     <a class="collapse-item" href="tags.php">View All Tags</a>
-                    <a class="collapse-item" href="add-tag.php">Add New Tag</a>
                 </div>
             </div>
         </li>
@@ -97,25 +93,17 @@
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAuthors"
                 aria-expanded="true" aria-controls="collapseAuthors">
                 <i class="fas fa-fw fa-users"></i>
-                <span>Authors</span>
+                <span>Users</span>
             </a>
             <div id="collapseAuthors" class="collapse" aria-labelledby="headingAuthors" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Author Management:</h6>
-                    <a class="collapse-item" href="users.php">View All Authors</a>
-                    <a class="collapse-item" href="add-author.php">Add New Author</a>
-                    <a class="collapse-item" href="author-roles.php">Manage Roles</a>
+                    <a class="collapse-item" href="users.php">View All Users</a>
                 </div>
             </div>
         </li>
     <?php endif; ?>
-    <!-- Nav Item - Comments -->
-    <li class="nav-item">
-        <a class="nav-link" href="comments.php">
-            <i class="fas fa-fw fa-comments"></i>
-            <span>Comments</span>
-        </a>
-    </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -144,7 +132,7 @@
 
     <!-- Nav Item - Your Profile -->
     <li class="nav-item">
-        <a class="nav-link" href="../profile.php">
+        <a class="nav-link" href="./profile.php?id<?= $_SESSION['user']['id'] ?>">
             <i class="fas fa-fw fa-user"></i>
             <span>Your Profile</span>
         </a>

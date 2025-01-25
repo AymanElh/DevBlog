@@ -173,13 +173,13 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo htmlspecialchars($_SESSION['user']['full_name']) ?></span>
                 <img class="img-profile rounded-circle"
-                    src="<?php echo $_SESSION['user']['profile_pic_url'] ?>">
+                    src="../public/assets/img/<?= $_SESSION['user']['profile_picture_url'] ?>">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="../public/index.php">
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                <i class="fa-solid fa-house fa-sm fa-fw-mr-2 text-gray-400"></i>
                     Home
                 </a>
                 <a class="dropdown-item" href="profile.php">

@@ -209,7 +209,7 @@ class Article
 
     public static function mostReadArticles(): ?array
     {
-        $query = "SELECT title, created_at, featured_image, views FROM articles ORDER BY views DESC LIMIT 10";
+        $query = "SELECT id, title, created_at, featured_image, views FROM articles ORDER BY views DESC LIMIT 10";
         $stmt = (Database::connect())->prepare($query);
 
         if ($stmt->execute()) {

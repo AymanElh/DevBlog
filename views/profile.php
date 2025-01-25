@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -91,32 +91,84 @@ $user = (new User(new BaseModel(Database::connect())))->getUser($userEmail);
 </head>
 
 <body>
-    <div class="profile-container">
-        <!-- Profile Header -->
-        <div class="profile-header">
-            <img src="https://via.placeholder.com/150" alt="Profile Picture">
-            <h2><?= htmlspecialchars($user[0]['full_name']) ?></h2>
-            <p><?= htmlspecialchars($user[0]['email']) ?></p>
+
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid" style="width: 80vw;">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="index.php">
+                <img src="./assets/img/image.png" alt="DevBlog Logo" style="width: 50px; height: auto;">
+                <h1 class="ms-2 mb-0">DevBlog</h1>
+            </a>
+
+            <!-- Toggle Button for Mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <div class="d-flex gap-2">
+                    <?php if (!empty($_SESSION['user'])): ?>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a href="../views/profile.php" class="nav-link">Profile</a>
+                            </li>
+                            <?php if ($_SESSION['user']['role'] === 'admin' || $_SESSION['user']['role'] === 'author') : ?>
+                                <li class="nav-item">
+                                    <a href="../views/dashboard.php" class="nav-link ">Dashboard</a>
+                                </li>
+                            <?php endif; ?>
+                            <li class="nav-item">
+                                <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+                            </li>
+                        </ul>
+                    <?php else: ?>
+                        <a href="../views/login.php" class="btn btn-outline-primary">Login</a>
+                        <a href="../views/signup.php" class="btn btn-primary">Signup</a>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <!-- Profile Details -->
-        <div class="profile-details">
-            <h3>About</h3>
-            <p><?= htmlspecialchars($user[0]['bio']) ?></p>
-
-            <h3>Role</h3>
-            <p><?= htmlspecialchars($user[0]['role']) ?></p>
-
-            <h3>Phone</h3>
-            <p>+123-456-7890</p>
-        </div>
-
-        <!-- Profile Actions -->
-        <div class="profile-actions">
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+    <!-- Profile Details -->
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">Profile Settings</div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="fullname" class="form-label">FullName</label>
+                                <input type="text" class="form-control" id="fullname" value="<?= $user[0]['full_name'] ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" value="<?= $user[0]['username'] ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" value="<?= $user[0]['email'] ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="bio" class="form-label">Bio</label>
+                                <textarea class="form-control" id="bio" rows="3">my bio</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Role</label>
+                                <input type="text" class="form-control" id="role" value="Admin" disabled>
+                            </div>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
 
     <!-- Update Modal -->
     <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">

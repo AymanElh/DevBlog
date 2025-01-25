@@ -92,7 +92,6 @@ class Auth
 
     public static function logout() 
     {
-        session_start();
         session_unset();
         session_destroy();
     }

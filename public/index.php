@@ -24,9 +24,8 @@ UserHandler::logout();
 
 $keyword = isset($_GET['search-bar']) ? trim($_GET['search-bar']) : "";
 
-if(!empty($keyword)) {
+if (!empty($keyword)) {
     $articles = $articleModel->searchArticles($keyword);
-
 }
 
 ?>
@@ -75,7 +74,7 @@ if(!empty($keyword)) {
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid" style="width: 80vw;">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="index.php">
@@ -98,7 +97,7 @@ if(!empty($keyword)) {
                             </li>
                             <?php if ($_SESSION['user']['role'] === 'admin' || $_SESSION['user']['role'] === 'author') : ?>
                                 <li class="nav-item">
-                                    <a href="../views/dashboard.php" class="nav-link">Dashboard</a>
+                                    <a href="../views/dashboard.php" class="nav-link ">Dashboard</a>
                                 </li>
                             <?php endif; ?>
                             <li class="nav-item">
@@ -152,7 +151,7 @@ if(!empty($keyword)) {
             ?>
                     <div class="col">
                         <div class="card article-card h-100">
-                            <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Article Image">
+                            <img src="../public/assets/img/<?= ($article['featured_image']); ?>" class="card-img-top" alt="Article Image">
                             <div class="card-body">
                                 <h5 class="card-title"><?= htmlspecialchars($article['title']) ?></h5>
                                 <p class="card-text"><?= htmlspecialchars($article['content']) ?></p>

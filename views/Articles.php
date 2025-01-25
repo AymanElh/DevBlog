@@ -49,6 +49,11 @@ if ($_SESSION['user']['role'] === 'admin') {
 } else if ($_SESSION['user']['role'] === 'author') {
     $articles = $article->getArticlesByAuthor((int)$userid);
 }
+
+// foreach($articles as $article) {
+//     echo $article['category_id'] .   $category->getCategoryName((int)$article['category_id']) . '<br>';
+// }
+// die;
 ?>
 
 <!DOCTYPE html>
@@ -133,9 +138,13 @@ if ($_SESSION['user']['role'] === 'admin') {
                                             <tr>
                                                 <td><?= $count++ ?></td>
                                                 <td><?= htmlspecialchars($article['title']) ?></td>
-                                                <td>Science</td>
                                                 <td>
-                                                    <?php foreach($tags as $tag) : ?>
+                                                    <span class="badge badge-info mr-1">
+                                                        <?= (new Category($baseModel))->getCategoryName((int)$article['category_id']) ?>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <?php foreach ($tags as $tag) : ?>
                                                         <span class="badge badge-primary mr-1"><?= $tag ?></span>
                                                     <?php endforeach; ?>
                                                 </td>

@@ -56,17 +56,10 @@ class Category
 
     public function getCategoryName(int $category_id) : string
     {
-        $where = "id = $category_id";
-        $result = $this->dbHandler->selectRecords($this->table, 'name', $where);
-        // echo "<pre>";
-
-        // var_dump($result[0]['name']);
-        // echo "</pre>";
-
-        if($result) { 
-            return $result[0]['name'];
-        }
-        return "";
+        $stmt = (Database::connect())->prepare("SELECT name FROM categories WHERE id = ?");
+        $stmt->execute([$category_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['name'];
     }
 
     public function getCountCategories() : int 

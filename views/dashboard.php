@@ -40,7 +40,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 
 $top_articles = $article::mostReadArticles();
 
-if($_SESSION['user']['role'] === 'admin') {
+if ($_SESSION['user']['role'] === 'admin') {
     $articles = $article->getRecentArticles();
 } elseif ($_SESSION['user']['role'] === 'author') {
     $articles = $article->getRecentArticlesByAuthor($_SESSION['user']['id']);
@@ -258,7 +258,7 @@ Auth::checkAccess(['admin', 'author']);
                                                     </div>
                                                 </div>
                                                 <div class="ml-2">
-                                                    <a href="./entities/users/user-profile.php?id="
+                                                    <a href="./profile.php?id=<?= $user['id']; ?>"
                                                         class="btn btn-primary btn-sm">
                                                         View Profile
                                                     </a>
@@ -308,7 +308,7 @@ Auth::checkAccess(['admin', 'author']);
                                                     </div>
                                                 </div>
                                                 <div class="ml-2">
-                                                    <a href="./entities/articles/view-article.php?id=<?= $article['id'] ?>"
+                                                    <a href="./singlePageArticle.php?id=<?= $article['id'] ?>"
                                                         class="btn btn-success btn-sm">
                                                         Read Article
                                                     </a>
@@ -390,10 +390,6 @@ Auth::checkAccess(['admin', 'author']);
                                         ?>
                                             <tr>
                                                 <td>
-                                                    <img src="<?= htmlspecialchars($article['featured_image']) ?>"
-                                                        alt="Thumbnail"
-                                                        class="img-thumbnail mr-2"
-                                                        style="width: 50px; height: 50px; object-fit: cover;">
                                                     <?= htmlspecialchars($article['title']) ?>
                                                 </td>
                                                 <td><?= htmlspecialchars($article['author_name']) ?></td>
@@ -416,19 +412,10 @@ Auth::checkAccess(['admin', 'author']);
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="view-article.php?id=<?= $article['id'] ?>"
+                                                        <a href="./singlePageArticle.php?id=<?= $article['id'] ?>"
                                                             class="btn btn-info btn-sm">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="edit-article.php?id=<?= $article['id'] ?>"
-                                                            class="btn btn-primary btn-sm">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <button type="button"
-                                                            class="btn btn-danger btn-sm delete-article"
-                                                            data-id="<?= $article['id'] ?>">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>

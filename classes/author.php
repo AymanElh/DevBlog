@@ -12,4 +12,5 @@ use Classes\User;
 class Author extends User
 {
     // manage articles
+    
 }

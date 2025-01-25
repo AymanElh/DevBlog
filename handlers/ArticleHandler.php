@@ -51,15 +51,12 @@ class ArticleHandler
             // }
 
 
-            $filePath = null;
-            if (isset($_FILES['article-img']) && $_FILES['article-img']['error'] === UPLOAD_ERR_OK) {
-                $file = $_FILES['article-img'];
+            if (isset($_FILES['article-img']) && !empty($_FILES['article-img']['name'])) {
 
-                $uploadDir = __DIR__ . '/../public/assets/img/';
-                $filePath = $uploadDir . basename($file['name']);
-                if (!move_uploaded_file($file['tmp_name'], $filePath)) {
-                    return 'Error uploading the file.';
-                }
+                $articleImg = $_FILES['article-img']['name'];
+                $temp_file = $_FILES['article-img']['tmp_name'];
+                $folder = "../public/assets/img/$articleImg";
+                move_uploaded_file($temp_file, $folder);
             }
         
             $categoryId = $this->article->getCategoryId($category);
@@ -68,10 +65,8 @@ class ArticleHandler
             }
 
 
-            
-
             try {
-                $this->article->createArticle($title, $content, $filePath, $categoryId, $scheduledDate, $author, $tags);
+                $this->article->createArticle($title, $content, $articleImg, $categoryId, $scheduledDate, $author, $tags);
                 header("Location: ../views/articles.php");
             } catch (Exception $e) {
                 error_log("error inserting the article: " . $e->getMessage());

@@ -99,7 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <td><?= htmlspecialchars($user['email']); ?></td>
                                             <td><?= htmlspecialchars($user['bio']); ?></td>
                                             <td>
-                                            <td>
                                                 <form method="POST" action="">
                                                     <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                                     <select name="user-role" onchange="if(confirm('Are you sure you want to change the role?')) this.form.submit()">
@@ -112,8 +111,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             </td>
 
                                             <td>
-                                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editUserModal<?= $user['id']; ?>">Edit</button>
-                                                <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal<?= $user['id']; ?>">Delete</button>
+                                                <button
+                                                    class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editUserModal<?= $user['id'] ?>">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button"
+                                                    class="btn btn-danger btn-sm delete-user" data-toggle="modal" data-target="#deleteUserModal<?= $user['id'] ?>">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                         <!-- Edit User Modal -->

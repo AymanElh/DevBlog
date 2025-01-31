@@ -71,46 +71,57 @@ if (!empty($keyword)) {
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="./assets/img/image.png" alt="DevBlog Logo" style="width: 50px; height: auto;">
-                <h1 class="ms-2 mb-0">DevBlog</h1>
-            </a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="index.php">
+            <img src="./assets/img/image.png" alt="DevBlog Logo" style="width: 50px; height: auto;">
+            <h1 class="ms-2 mb-0 fs-4 fw-bold">DevBlog</h1>
+        </a>
 
-            <!-- Toggle Button for Mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <!-- Toggle Button for Mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <!-- Navbar Links -->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav d-flex gap-3">
-                    <?php if (!empty($_SESSION['user'])): ?>
+        <!-- Navbar Links -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav d-flex align-items-center gap-3">
+                <?php if (!empty($_SESSION['user'])): ?>
+                    <li class="nav-item">
+                        <a href="../views/profile.php" class="nav-link text-white px-3 py-2 rounded">
+                            <i class="fas fa-user-circle me-1"></i> Profile
+                        </a>
+                    </li>
+                    <?php if ($_SESSION['user']['role'] === 'admin' || $_SESSION['user']['role'] === 'author') : ?>
                         <li class="nav-item">
-                            <a href="../views/profile.php" class="nav-link">Profile</a>
-                        </li>
-                        <?php if ($_SESSION['user']['role'] === 'admin' || $_SESSION['user']['role'] === 'author') : ?>
-                            <li class="nav-item">
-                                <a href="../views/dashboard.php" class="nav-link">Dashboard</a>
-                            </li>
-                        <?php endif; ?>
-                        <li class="nav-item">
-                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item">
-                            <a href="../views/login.php" class="nav-link">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../views/signup.php" class="nav-link">Signup</a>
+                            <a href="../views/dashboard.php" class="nav-link text-white px-3 py-2 rounded">
+                                <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                            </a>
                         </li>
                     <?php endif; ?>
-                </ul>
-            </div>
+                    <li class="nav-item">
+                        <a href="#" class="btn btn-danger px-4 py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li class="nav-item">
+                        <a href="../views/login.php" class="btn btn-outline-light px-4 py-2 fw-bold">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../views/signup.php" class="btn btn-light px-4 py-2 fw-bold text-primary">
+                            <i class="fas fa-user-plus"></i> Signup
+                        </a>
+                    </li>
+                <?php endif; ?>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
 
     <!-- Logout Modal-->

@@ -98,7 +98,7 @@ $user = (new User(new BaseModel(Database::connect())))->getUser($userEmail);
         <div class="container-fluid" style="width: 80vw;">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="./assets/img/image.png" alt="DevBlog Logo" style="width: 50px; height: auto;">
+                <img src="../public/assets/img/image.png" alt="DevBlog Logo" style="width: 50px; height: auto;">
                 <h1 class="ms-2 mb-0">DevBlog</h1>
             </a>
 

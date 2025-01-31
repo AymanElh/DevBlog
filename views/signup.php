@@ -18,11 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signup'])) {
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $bio = $_POST['bio'] ?? "";
-    $pic = $_FILES['pic']['name'] ?? "";
+    $confirmPassword = $_POST['repeatPassword'];
+    // dump($name, $username, $email, $password); die;
 
-    $message = $auth->signup($name, $username, $email, $password, $bio, $pic);
-    header("Location: ../views/login.php");
+    $message = $auth->signup($name, $username, $email, $password, $confirmPassword);
+    // header("Location: ../views/login.php");
 }
 ?>
 
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signup'])) {
 
                             <!-- Display message if any -->
                             <?php if ($message): ?>
-                                <div class="alert alert-info"><?= htmlspecialchars($message) ?></div>
+                                <div class="alert alert-<?= ($message['type'] === 'success') ? 'success' : 'danger'; ?>"><?= htmlspecialchars($message['message']) ?></div>
                             <?php endif; ?>
 
                             <!-- Form -->
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signup'])) {
                                         <input type="text" class="form-control form-control-user" id="exampleFirstName" name="name" placeholder="First Name" value="<?= htmlspecialchars($name) ?>" required>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName" name="username" placeholder="Last Name" value="<?= htmlspecialchars($username) ?>" required>
+                                        <input type="text" class="form-control form-control-user" id="exampleLastName" name="username" placeholder="Username" value="<?= htmlspecialchars($username) ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -122,13 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signup'])) {
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" name="repeatPassword" placeholder="Repeat Password" required>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <textarea class="form-control" name="bio" placeholder="Bio" rows="3"><?= htmlspecialchars($bio) ?></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="pic">Profile Picture</label>
-                                    <input type="file" class="form-control" name="pic" id="pic" accept="image/*">
                                 </div>
                                 <button name="signup" type="submit" class="btn btn-primary btn-user btn-block">
                                     Register Account

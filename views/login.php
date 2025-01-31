@@ -27,13 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     $message = $auth->login($email, $password);
-
-    if ($message === "Login added successfully") {
+    // dump($message); die;
+    if ($message['type'] === "success") {
         header("Location: dashboard.php");
         exit;
-    } else {
-        $message = "Invalid email or password";
-    }
+    } 
 }
 ?>
 
@@ -124,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                     <!-- Display message if any -->
                                     <?php if ($message): ?>
-                                        <div class="alert alert-info"><?= htmlspecialchars($message) ?></div>
+                                        <div class="alert alert-<?= ($message['type'] === 'success') ? 'success' : 'danger'; ?>"><?= htmlspecialchars($message['message']) ?></div>
                                     <?php endif; ?>
 
                                     <!-- Form -->

@@ -42,15 +42,15 @@ class User
 
     public function usernameExist($username): bool
     {
-        $where = "username = $username";
-        $result = self::$basemodel->selectRecords(self::$table, '*', $where);
+        $where = "username = ?";
+        $result = self::$basemodel->selectRecords(self::$table, '*', $where, [$username]);
         return $result ? true : false;
     }
 
     public function emailExist($email): bool
     {
-        $where = "email = $email";
-        $result = self::$basemodel->selectRecords(self::$table, '*', $where);
+        $where = "email = ?";
+        $result = self::$basemodel->selectRecords(self::$table, '*', $where, [$email]);
         return $result ? true : false;
     }
 

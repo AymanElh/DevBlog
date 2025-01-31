@@ -9,13 +9,11 @@ $article = new Article(new BaseModel(Database::connect()));
 
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : "";
 
-if (!empty($keyword)) {
+// if (!empty($keyword)) {
     $articles = $article->searchArticles($keyword);
-    // var_dump($articles);
-}
-else {
-    $articles = $article->getAllArticles();
-}
+    // dump($articles);   
+// }
+
 
 header("Content-Type: application/json");
 echo json_encode($articles);

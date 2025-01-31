@@ -32,29 +32,36 @@ class Auth
         return ""; 
     }
 
-
-    public function signup(string $name, string $username, string $email, string $password, string $bio = "", string $pic = ""): string
+    public function signup(string $name, string $username, string $email, string $password, string $confirmPassword): array
     {
 
         $errors = $this->validateSignupInput($name, $username, $email, $password);
 
         if($errors) {
-            return $errors;
+            return ["type" => "error", "message" => $errors];
+        }
+
+        if($this->user->usernameExist($username)) {
+            return ["type" => "error", "message" => "Username already exists"];
         }
 
         if ($this->user->emailExist($email)) {
-            return "Username or email already exist";
+            return ["type" => "error", "message" => "Email already exists"];
+        }
+
+        if($password !== $confirmPassword) {
+            return ["type" => "error", "message" => "Passwords doesn't match"];
         }
 
         $password_hashed = password_hash($password, PASSWORD_ARGON2I);
 
         try {
-            $result = $this->user->createUser($name, $username, $email, $password_hashed, $bio, $pic);
-            return "Account created successfully";
+            $result = $this->user->createUser($name, $username, $email, $password_hashed);
+            return ["type" => "success", "message" => "Account created successfully"];
         }
         catch(Exception $e) {
             error_log("Invalid sing up: " . $e->getMessage());
-            return "Account createtion failed";
+            return ["type" => "error", "message" => "Account creation failed"];
         }
     }
 
@@ -69,25 +76,27 @@ class Auth
         return "";
     }
 
-    public function login(string $email, string $password): string
+    public function login(string $email, string $password): array
     {
         $errors = $this->validateLoginInput($email, $password);
 
         if($errors) {
-            return $errors;
+            return ["type" => "error", "message" => $errors];
         }
 
         $user = User::getUser($email);
         if (!$user) {
-            return "";
+            return ["type" => "error", "message" => "User with this email doesn't exist"];
         }
         
         if (password_verify($password, $user[0]['password_hash'])) {
             $_SESSION['user'] = $user[0];
 
-            return "Login added successfully";
+            return ["type" => "success", "message" => "Login successfuly"];
         }
-        return "";
+        else {
+            return ["type" => "error", "message" => "Password Incorect"];
+        }
     }
 
     public static function logout() 

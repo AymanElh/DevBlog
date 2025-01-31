@@ -209,7 +209,7 @@ class Article
 
     public static function mostReadArticles(): ?array
     {
-        $query = "SELECT id, title, created_at, featured_image, views FROM articles ORDER BY views DESC LIMIT 10";
+        $query = "SELECT id, title, created_at, featured_image, views FROM articles ORDER BY views DESC LIMIT 3";
         $stmt = (Database::connect())->prepare($query);
 
         if ($stmt->execute()) {
@@ -239,7 +239,7 @@ class Article
         LEFT JOIN tags ON article_tags.tag_id = tags.id
         GROUP BY articles.id
         ORDER BY articles.created_at DESC
-        LIMIT 5
+        LIMIT 4;
     ";
 
         $stmt = (Database::connect())->prepare($query);
@@ -299,7 +299,8 @@ class Article
 
     public function searchArticles(string $keyword) : array
     {
-        $query = "SELECT * FROM articles WHERE title LIKE '%$keyword%'";
+        // $query = "SELECT * FROM articles WHERE title LIKE '%$keyword%' OR content LIKE '%$keyword%'";
+        $query = "SELECT a.id AS id, a.title AS title, a.content AS content, a.featured_image as featured_image, a.created_at AS created_at, u.full_name as author_name FROM articles a JOIN users u ON u.id = a.author_id WHERE title LIKE '%$keyword%' OR content LIKE '%$keyword%'";
         try {
             $stmt = (Database::connect())->prepare($query);
             if($stmt->execute()) {

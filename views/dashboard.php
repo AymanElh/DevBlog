@@ -12,19 +12,19 @@ use Auth\Auth;
 use Handlers\ArticleHandler;
 
 // Prepare data for the chart
-// $categories = [];
-// $counts = [];
+$categories = [];
+$counts = [];
 // // Define colors for the chart
-// $colors = [
-//     'rgb(78, 115, 223)',    // primary
-//     'rgb(28, 200, 138)',    // success
-//     'rgb(54, 185, 204)',    // info
-//     'rgb(246, 194, 62)',    // warning
-//     'rgb(231, 74, 59)',     // danger
-//     'rgb(133, 135, 150)',   // secondary
-//     'rgb(90, 92, 105)',     // dark
-//     'rgb(244, 246, 249)'    // light
-// ];
+$colors = [
+    'rgb(78, 115, 223)',    // primary
+    'rgb(28, 200, 138)',    // success
+    'rgb(54, 185, 204)',    // info
+    'rgb(246, 194, 62)',    // warning
+    'rgb(231, 74, 59)',     // danger
+    'rgb(133, 135, 150)',   // secondary
+    'rgb(90, 92, 105)',     // dark
+    'rgb(244, 246, 249)'    // light
+];
 
 $baseModel = new BaseModel(Database::connect());
 $article = new Article($baseModel);
@@ -50,12 +50,12 @@ if ($_SESSION['user']['role'] === 'admin') {
 // var_dump($_SESSION['user']['role']);
 // User::checkRole('admin');
 
-// $categoryStats = $category->getCategoryStats();
+$categoryStats = $category->getCategoryStats();
 
-// foreach ($categoryStats as $stat) {
-//     $categories[] = $stat['name'];
-//     $counts[] = $stat['totalArticles'];
-// }
+foreach ($categoryStats as $stat) {
+    $categories[] = $stat['name'];
+    $counts[] = $stat['totalArticles'];
+}
 
 
 Auth::checkAccess(['admin', 'author']);
@@ -325,9 +325,10 @@ Auth::checkAccess(['admin', 'author']);
 
 
                             <!-- Pie Chart -->
+                            <!-- Pie Chart -->
                             <?php if ($_SESSION['user']['role'] === 'admin') : ?>
                                 <div class="col-xl-4 col-lg-5">
-                                    <div class="card shadow mb-4">
+                                    <div class="card shadow mb-4" style="min-height: 500px;"> <!-- Increased height -->
                                         <!-- Card Header - Dropdown -->
                                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                             <h6 class="m-0 font-weight-bold text-primary">Category Distribution</h6>
@@ -345,9 +346,9 @@ Auth::checkAccess(['admin', 'author']);
                                             </div>
                                         </div>
                                         <!-- Card Body -->
-                                        <div class="card-body">
-                                            <div class="chart-pie pt-4 pb-2">
-                                                <canvas id="categoryPieChart"></canvas>
+                                        <div class="card-body" style="min-height: 400px; display: flex; flex-direction: column; justify-content: center;">
+                                            <div style="height: 300px;">
+                                                <canvas class="myChart"></canvas>
                                             </div>
                                             <div class="mt-4 text-center small">
                                                 <?php foreach ($categoryStats as $index => $stat): ?>
@@ -362,6 +363,7 @@ Auth::checkAccess(['admin', 'author']);
                                     </div>
                                 </div>
                             <?php endif; ?>
+
 
                     </div>
 
@@ -465,6 +467,18 @@ Auth::checkAccess(['admin', 'author']);
         </div>
     </div>
 
+    <script>
+        const chartData = {
+            labels: <?= json_encode($categories) ?>,
+            data: <?= json_encode($counts) ?>,
+            colors: <?= json_encode($colors) ?>,
+            backgroundColor: <?= json_encode(array_slice($colors, 0, count($categories))) ?>,
+        }
+        console.log(chartData);
+    </script>
+
+    <script src="../public/assets/js/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
@@ -488,10 +502,6 @@ Auth::checkAccess(['admin', 'author']);
 
     <!-- Page level custom scripts -->
     <script src="../public/assets/js/js/demo/datatables-demo.js"></script>
-
-
-
-
 
 
 </body>

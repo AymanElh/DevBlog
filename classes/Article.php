@@ -297,7 +297,7 @@ class Article
         
     }
 
-    public function searchArticles(string $keyword)
+    public function searchArticles(string $keyword) : array
     {
         $query = "SELECT * FROM articles WHERE title LIKE '%$keyword%'";
         try {

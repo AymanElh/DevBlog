@@ -78,8 +78,10 @@ if (isset($_GET['id'])) {
                             </li>
                         </ul>
                     <?php else: ?>
-                        <a href="./login.php" class="btn btn-primary">Login</a>
-                        <a href="./signup.php" class="btn btn-primary">Signup</a>
+                        <li class="nav-item">
+                            <a href="./login.php" class="nav-link">Login</a>
+                            <a href="./signup.php" class="nav-link">Signup</a>
+                        </li>
                     <?php endif; ?>
                 </div>
             </div>

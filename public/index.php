@@ -16,11 +16,8 @@ $user = new User($dbHandler);
 // Fetch published articles
 $articleModel = new Article($dbHandler);
 $articles = $articleModel->getPublishedArticles();
-// echo "<pre>";
-// var_dump($articles);
-// echo "</pre>";
+
 UserHandler::logout();
-// var_dump($_SESSION);
 
 $keyword = isset($_GET['search-bar']) ? trim($_GET['search-bar']) : "";
 
@@ -75,7 +72,7 @@ if (!empty($keyword)) {
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid" style="width: 80vw;">
+        <div class="container-fluid">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="index.php">
                 <img src="./assets/img/image.png" alt="DevBlog Logo" style="width: 50px; height: auto;">
@@ -89,29 +86,32 @@ if (!empty($keyword)) {
 
             <!-- Navbar Links -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <div class="d-flex gap-2">
+                <ul class="navbar-nav d-flex gap-3">
                     <?php if (!empty($_SESSION['user'])): ?>
-                        <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="../views/profile.php" class="nav-link">Profile</a>
+                        </li>
+                        <?php if ($_SESSION['user']['role'] === 'admin' || $_SESSION['user']['role'] === 'author') : ?>
                             <li class="nav-item">
-                                <a href="../views/profile.php" class="nav-link">Profile</a>
+                                <a href="../views/dashboard.php" class="nav-link">Dashboard</a>
                             </li>
-                            <?php if ($_SESSION['user']['role'] === 'admin' || $_SESSION['user']['role'] === 'author') : ?>
-                                <li class="nav-item">
-                                    <a href="../views/dashboard.php" class="nav-link ">Dashboard</a>
-                                </li>
-                            <?php endif; ?>
-                            <li class="nav-item">
-                                <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
-                            </li>
-                        </ul>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+                        </li>
                     <?php else: ?>
-                        <a href="../views/login.php" class="btn btn-outline-primary">Login</a>
-                        <a href="../views/signup.php" class="btn btn-primary">Signup</a>
+                        <li class="nav-item">
+                            <a href="../views/login.php" class="nav-link">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../views/signup.php" class="nav-link">Signup</a>
+                        </li>
                     <?php endif; ?>
-                </div>
+                </ul>
             </div>
         </div>
     </nav>
+
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -134,45 +134,27 @@ if (!empty($keyword)) {
     </div>
 
     <!-- Search Bar -->
-    <div class="container search-bar">
+    <!-- <div class="container search-bar">
         <form class="d-flex" method="GET">
             <input class="form-control me-2" type="search" name="search-bar" placeholder="Search articles..." aria-label="Search">
             <button class="btn btn-outline-success" name="search-btn" type="submit">Search</button>
         </form>
+    </div> -->
+
+    <!-- Search with ajax -->
+    <div class="container search-bar">
+        <input id="search-bar" class="form-control me-2" type="search" name="search-bar" placeholder="Search articles..." aria-label="Search">
     </div>
+    <div id="search-results"></div>
 
     <!-- Article Cards -->
-    <div class="container my-5">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <!-- Example Article Card 1 -->
-            <?php
-            if (!empty($articles)) :
-                foreach ($articles as $article) :
-            ?>
-                    <div class="col">
-                        <div class="card article-card h-100">
-                            <img src="../public/assets/img/<?= ($article['featured_image']); ?>" class="card-img-top" alt="Article Image">
-                            <div class="card-body">
-                                <h5 class="card-title"><?= htmlspecialchars($article['title']) ?></h5>
-                                <p class="card-text"><?= htmlspecialchars($article['content']) ?></p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted"><?= User::getAuthorName($article['author_id']) ?></small>
-                                    <small class="text-muted"><?= $article['created_at'] ?></small>
-                                </div>
-                                <a href="../views/singlePageArticle.php/?id=<?= $article['id']; ?>" class="btn btn-primary mt-3">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-            <?php
-                endforeach;
-            endif;
-            ?>
 
-        </div>
-    </div>
 
     <!-- Footer -->
     <?php include("../views/components/footer.php"); ?>
+
+
+    <script src="./assets/js/script.js"></script>
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
